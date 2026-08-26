@@ -3,247 +3,891 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Xiaoyu</title>
+<title>Xiaoyu — Personal Website</title>
+
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-:root{
-    --bg:#ffffff;
-    --text-primary:#111827;
-    --text-secondary:#6b7280;
-    --text-tertiary:#9ca3af;
-    --tag-bg:#f3f4f6;
-    --border-line:#e5e7eb;
-    --link-blue:#2563eb;
+:root {
+    --bg: #fafafa;
+    --card: rgba(255,255,255,0.78);
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border: #e5e7eb;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --shadow: 0 10px 30px rgba(0,0,0,0.05);
     --transition: 0.25s ease;
 }
 
-[data-theme="dark"]{
-    --bg:#0f172a;
-    --text-primary:#f1f5f9;
-    --text-secondary:#94a3b8;
-    --text-tertiary:#64748b;
-    --tag-bg:#1e293b;
-    --border-line:#334155;
-    --link-blue:#60a5fa;
+[data-theme="dark"] {
+    --bg: #0b1120;
+    --card: rgba(15,23,42,0.78);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+    --border: #1e293b;
+    --accent: #60a5fa;
+    --accent-light: #172554;
+    --tag-bg: #1e293b;
+    --shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-body{
+html {
+    scroll-behavior: smooth;
+}
+
+body {
     font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
     background: var(--bg);
     color: var(--text-primary);
-    transition: background var(--transition), color var(--transition);
+    line-height: 1.6;
+
+    transition:
+        background var(--transition),
+        color var(--transition);
+
+    background-image:
+        linear-gradient(
+            rgba(128,128,128,0.05) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(128,128,128,0.05) 1px,
+            transparent 1px
+        );
+
+    background-size: 40px 40px;
 }
 
-main{
-    max-width:900px;
-    margin:auto;
-    padding:90px 25px;
+a {
+    color: inherit;
 }
 
-.theme-toggle{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:var(--tag-bg);
-    border:none;
-    padding:8px 14px;
-    border-radius:999px;
-    font-size:14px;
-    color:var(--text-primary);
-    cursor:pointer;
+button {
+    font-family: inherit;
+}
+
+/* Navigation */
+
+nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: min(900px, calc(100% - 36px));
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 12px 10px 18px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: var(--card);
+    backdrop-filter: blur(15px);
+
+    box-shadow: var(--shadow);
+
+    z-index: 100;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-right a {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
     transition: var(--transition);
 }
-.theme-toggle:hover{
-    opacity:0.8;
+
+.nav-right a:hover {
+    color: var(--text-primary);
 }
 
-h1{
-    font-size:64px;
-    letter-spacing:-3px;
-    line-height:1.1;
-}
+.theme-toggle {
+    border: none;
+    background: var(--tag-bg);
+    color: var(--text-primary);
 
-.intro{
-    margin-top:15px;
-    font-size:22px;
-    color:var(--text-secondary);
-}
+    padding: 7px 12px;
+    border-radius: 999px;
 
-.links{
-    margin-top:35px;
-}
-
-.links a{
-    color:var(--text-primary);
-    text-decoration:none;
-    margin-right:22px;
-    font-size:15px;
+    cursor: pointer;
     transition: var(--transition);
 }
 
-.links a:hover{
-    text-decoration:underline;
-}
-
-section{
-    margin-top:90px;
-}
-
-h2{
-    font-size:26px;
-    margin-bottom:25px;
-}
-
-p{
-    color:var(--text-secondary);
-    line-height:1.8;
-}
-
-.tech span{
-    display:inline-block;
-    padding:7px 14px;
-    margin:5px 4px;
-    border-radius:8px;
-    background:var(--tag-bg);
-    font-size:14px;
-    transition: var(--transition);
-}
-.tech span:hover{
+.theme-toggle:hover {
     transform: translateY(-2px);
 }
 
-.project{
-    border-left:2px solid var(--border-line);
-    padding-left:25px;
-    margin-bottom:32px;
+/* Main */
+
+main {
+    width: min(900px, calc(100% - 36px));
+    margin: auto;
+    padding: 150px 0 80px;
 }
 
-.project h3{
-    margin-bottom:8px;
+/* Hero */
+
+.hero {
+    position: relative;
+    padding: 55px 0 65px;
+    overflow: hidden;
 }
 
-.project a{
-    color:var(--link-blue);
-    text-decoration:none;
-    display:inline-block;
-    margin-top:6px;
+.hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    background: var(--accent);
+    opacity: 0.08;
+
+    border-radius: 50%;
+    filter: blur(60px);
+
+    top: -100px;
+    right: -50px;
+
+    pointer-events: none;
+}
+
+.avatar {
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: var(--text-primary);
+    color: var(--bg);
+
+    font-size: 24px;
+    font-weight: 700;
+
+    margin-bottom: 25px;
+
+    box-shadow: var(--shadow);
+}
+
+.hello {
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: clamp(48px, 8vw, 76px);
+    line-height: 1;
+    letter-spacing: -4px;
+    margin-bottom: 20px;
+}
+
+.hero-description {
+    max-width: 650px;
+
+    color: var(--text-secondary);
+
+    font-size: 20px;
+    line-height: 1.7;
+}
+
+.hero-description strong {
+    color: var(--text-primary);
+}
+
+.hero-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.hero-links a {
+    text-decoration: none;
+
+    border: 1px solid var(--border);
+
+    padding: 9px 17px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+
+    background: var(--card);
+
     transition: var(--transition);
 }
-.project a:hover{
-    transform: translateX(4px);
+
+.hero-links a:hover {
+    transform: translateY(-2px);
+    border-color: var(--text-primary);
 }
 
-footer{
-    margin-top:100px;
-    color:var(--text-tertiary);
-    font-size:14px;
+/* Sections */
+
+section {
+    margin-top: 85px;
 }
 
-/* 移动端适配 */
-@media (max-width: 600px){
-    h1{
-        font-size:42px;
-        letter-spacing:-1px;
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 25px;
+}
+
+h2 {
+    font-size: 25px;
+    letter-spacing: -0.5px;
+}
+
+.section-label {
+    color: var(--text-tertiary);
+    font-size: 13px;
+}
+
+p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+/* Now */
+
+.now-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+
+    gap: 30px;
+
+    padding: 28px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background: var(--card);
+    backdrop-filter: blur(10px);
+
+    transition: var(--transition);
+}
+
+.now-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.now-title {
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Tech */
+
+.tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.tech span {
+    padding: 8px 13px;
+
+    border-radius: 9px;
+
+    background: var(--tag-bg);
+
+    font-size: 13px;
+    color: var(--text-secondary);
+
+    transition: var(--transition);
+}
+
+.tech span:hover {
+    transform: translateY(-3px);
+    color: var(--text-primary);
+}
+
+/* Projects */
+
+.projects {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.project {
+    padding: 25px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background: var(--card);
+    backdrop-filter: blur(10px);
+
+    transition: var(--transition);
+}
+
+.project:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.project-number {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    margin-bottom: 30px;
+}
+
+.project h3 {
+    font-size: 19px;
+    margin-bottom: 10px;
+}
+
+.project p {
+    font-size: 14px;
+}
+
+.project-link {
+    display: inline-block;
+
+    margin-top: 20px;
+
+    color: var(--accent);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.project-link:hover {
+    text-decoration: underline;
+}
+
+/* Blog */
+
+.posts {
+    border-top: 1px solid var(--border);
+}
+
+.post {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding: 22px 0;
+
+    border-bottom: 1px solid var(--border);
+
+    text-decoration: none;
+
+    transition: var(--transition);
+}
+
+.post:hover {
+    padding-left: 8px;
+}
+
+.post-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.post-description {
+    margin-top: 5px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.post-date {
+    color: var(--text-tertiary);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Contact */
+
+.contact {
+    padding: 35px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent-light),
+            var(--card)
+        );
+}
+
+.contact h2 {
+    margin-bottom: 10px;
+}
+
+.contact p {
+    max-width: 550px;
+}
+
+.contact a {
+    display: inline-block;
+
+    margin-top: 20px;
+
+    color: var(--accent);
+    text-decoration: none;
+
+    font-size: 14px;
+}
+
+/* Footer */
+
+footer {
+    margin-top: 100px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+    justify-content: space-between;
+
+    color: var(--text-tertiary);
+    font-size: 13px;
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+
+    nav {
+        top: 12px;
     }
-    main{
-        padding:50px 18px;
+
+    .nav-right a {
+        display: none;
     }
-    .intro{
-        font-size:18px;
+
+    main {
+        padding-top: 120px;
     }
-    section{
-        margin-top:65px;
+
+    h1 {
+        letter-spacing: -2.5px;
+    }
+
+    .hero-description {
+        font-size: 18px;
+    }
+
+    .now-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .projects {
+        grid-template-columns: 1fr;
+    }
+
+    .post {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    footer {
+        flex-direction: column;
+        gap: 8px;
     }
 }
 </style>
 </head>
+
 <body>
-<button class="theme-toggle" id="themeBtn">🌙 Dark</button>
+
+<nav>
+
+    <a href=" " class="logo">
+        Xiaoyu
+    </a >
+
+    <div class="nav-right">
+
+        <a href="#about">About</a >
+        <a href="#projects">Projects</a >
+        <a href="#notes">Notes</a >
+
+        <button
+            class="theme-toggle"
+            id="themeBtn">
+            🌙
+        </button>
+
+    </div>
+
+</nav>
+
 
 <main>
-<h1>Xiaoyu</h1>
-<div class="intro">Computer Science Student · Developer</div>
 
-<div class="links">
-<a href=" ">GitHub</a >
-<a href="#">Blog</a >
-</div>
+<section class="hero">
 
-<section>
-<h2>About</h2>
-<p>
-Student interested in computer science,
-software development and emerging technologies.
-Currently learning programming, algorithms and web development.
-</p >
+    <div class="avatar">
+        X
+    </div>
+
+    <div class="hello">
+        Hello, I'm
+    </div>
+
+    <h1>
+        Xiaoyu.
+    </h1>
+
+    <p class="hero-description">
+        A <strong>Computer Science student</strong>
+        interested in software development,
+        technology and learning how things work.
+        <br>
+        Currently building things and documenting the journey.
+    </p >
+
+    <div class="hero-links">
+
+        <a href="#">
+            GitHub ↗
+        </a >
+
+        <a href="#notes">
+            Read my notes
+        </a >
+
+        <a href="#contact">
+            Contact
+        </a >
+
+    </div>
+
 </section>
 
-<section>
-<h2>Tech Stack</h2>
-<div class="tech">
-<span>HTML</span>
-<span>CSS</span>
-<span>JavaScript</span>
-<span>Python</span>
-<span>Git</span>
-<span>Linux</span>
-<span>Data Structures</span>
-</div>
+
+<section id="about">
+
+    <div class="section-header">
+        <h2>About</h2>
+        <span class="section-label">01</span>
+    </div>
+
+    <p>
+        I'm currently studying computer science and exploring
+        programming, algorithms, web development and
+        emerging technologies.
+
+        This website is a small space where I collect
+        projects, notes and things I'm learning along the way.
+    </p >
+
 </section>
 
-<section>
-<h2>Projects</h2>
-<div class="project">
-<h3>Personal Website</h3>
-<p>A minimal personal website built with HTML and CSS.</p >
-<a href="#">View Project →</a >
-</div>
-
-<div class="project">
-<h3>Learning Notes</h3>
-<p>Notes and experiments about programming.</p >
-<a href="#">View Project →</a >
-</div>
-</section>
 
 <section>
-<h2>Contact</h2>
-<p>Open to learning, building and collaboration.</p >
+
+    <div class="section-header">
+        <h2>Now</h2>
+        <span class="section-label">02</span>
+    </div>
+
+    <div class="now-card">
+
+        <div class="now-title">
+            Currently
+        </div>
+
+        <p>
+            Building my personal website, learning more about
+            web development, experimenting with code and
+            keeping track of what I learn.
+        </p >
+
+    </div>
+
 </section>
 
-<footer>© 2026 Xiaoyu</footer>
+
+<section>
+
+    <div class="section-header">
+        <h2>Tech Stack</h2>
+        <span class="section-label">03</span>
+    </div>
+
+    <div class="tech">
+
+        <span>HTML</span>
+        <span>CSS</span>
+        <span>JavaScript</span>
+        <span>Python</span>
+        <span>Git</span>
+        <span>GitHub</span>
+        <span>Linux</span>
+        <span>Algorithms</span>
+
+    </div>
+
+</section>
+
+
+<section id="projects">
+
+    <div class="section-header">
+        <h2>Projects</h2>
+        <span class="section-label">04</span>
+    </div>
+
+    <div class="projects">
+
+        <div class="project">
+
+            <div class="project-number">
+                PROJECT / 01
+            </div>
+
+            <h3>
+                Personal Website
+            </h3>
+
+            <p>
+                A personal website built with
+                HTML, CSS and JavaScript.
+            </p >
+
+            <a href="#" class="project-link">
+                View project →
+            </a >
+
+        </div>
+
+
+        <div class="project">
+
+            <div class="project-number">
+                PROJECT / 02
+            </div>
+
+            <h3>
+                Learning Notes
+            </h3>
+
+            <p>
+                A collection of notes, experiments and
+                small projects from my learning journey.
+            </p >
+
+            <a href="#" class="project-link">
+                Explore notes →
+            </a >
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section id="notes">
+
+    <div class="section-header">
+        <h2>Recent Notes</h2>
+        <span class="section-label">05</span>
+    </div>
+
+    <div class="posts">
+
+        <a href="#" class="post">
+
+            <div>
+                <div class="post-title">
+                    What I'm learning about JavaScript
+                </div>
+
+                <div class="post-description">
+                    Small notes and experiments.
+                </div>
+            </div>
+
+            <div class="post-date">
+                Aug 2026
+            </div>
+
+        </a >
+
+
+        <a href="#" class="post">
+
+            <div>
+                <div class="post-title">
+                    Getting started with GitHub
+                </div>
+
+                <div class="post-description">
+                    Things I learned while building my website.
+                </div>
+            </div>
+
+            <div class="post-date">
+                Jul 2026
+            </div>
+
+        </a >
+
+
+        <a href="#" class="post">
+
+            <div>
+                <div class="post-title">
+                    My notes on data structures
+                </div>
+
+                <div class="post-description">
+                    A collection of concepts and examples.
+                </div>
+            </div>
+
+            <div class="post-date">
+                Jun 2026
+            </div>
+
+        </a >
+
+    </div>
+
+</section>
+
+
+<section id="contact">
+
+    <div class="contact">
+
+        <h2>
+            Let's connect.
+        </h2>
+
+        <p>
+            I'm always interested in learning,
+            building interesting things and meeting
+            people who enjoy technology.
+        </p >
+
+        <a href="mailto:your@email.com">
+            your@email.com →
+        </a >
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <span>
+        © 2026 Xiaoyu
+    </span>
+
+    <span>
+        Built with HTML · CSS · JavaScript
+    </span>
+
+</footer>
+
 </main>
 
+
 <script>
-const btn = document.getElementById('themeBtn');
-let theme = localStorage.getItem('theme') || 'light';
+
+const btn = document.getElementById("themeBtn");
+
+let theme =
+    localStorage.getItem("theme") || "light";
+
 applyTheme(theme);
 
-btn.addEventListener('click',()=>{
-    theme = theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem('theme',theme);
-    applyTheme(theme);
-})
 
-function applyTheme(t){
-    if(t === 'dark'){
-        document.documentElement.setAttribute('data-theme','dark');
-        btn.textContent = '☀️ Light';
-    }else{
-        document.documentElement.removeAttribute('data-theme');
-        btn.textContent = '🌙 Dark';
+btn.addEventListener("click", () => {
+
+    theme =
+        theme === "light"
+        ? "dark"
+        : "light";
+
+    localStorage.setItem(
+        "theme",
+        theme
+    );
+
+    applyTheme(theme);
+
+});
+
+
+function applyTheme(theme) {
+
+    if (theme === "dark") {
+
+        document.documentElement
+            .setAttribute(
+                "data-theme",
+                "dark"
+            );
+
+        btn.textContent = "☀️";
+
+    } else {
+
+        document.documentElement
+            .removeAttribute(
+                "data-theme"
+            );
+
+        btn.textContent = "🌙";
+
     }
+
 }
+
 </script>
+
 </body>
 </html>
