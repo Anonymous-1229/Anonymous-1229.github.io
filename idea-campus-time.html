@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Idea 可视化｜西大上课时间成本</title>
+  <meta
+    name="description"
+    content="用动态条形图比较西南大学校园内不同路线的时间成本。"
+  >
+
+  <style>
+    :root {
+      --text: #1f2937;
+      --muted: #667085;
+      --line: #d9dee7;
+      --background: #f5f7fa;
+      --surface: #ffffff;
+      --blue: #2f6fed;
+      --orange: #d97706;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--background);
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+    }
+
+    a {
+      color: var(--blue);
+    }
+
+    .container {
+      width: min(1000px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 20px 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .back-link {
+      color: var(--muted);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      color: var(--blue);
+    }
+
+    main {
+      padding: 64px 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 44px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin: 16px 0 42px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .visual {
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+      min-width: 210px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    select {
+      min-height: 40px;
+      padding: 8px 12px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    select:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(47, 111, 237, 0.3);
+      outline-offset: 2px;
+    }
+
+    .summary {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .summary strong {
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .chart-wrap {
+      padding: 26px 24px 22px;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      min-height: 380px;
+    }
+
+    .chart-bg {
+      fill: #fbfcfe;
+      stroke: var(--line);
+      stroke-width: 1;
+    }
+
+    .grid-line {
+      stroke: var(--line);
+      stroke-width: 1;
+    }
+
+    .axis-label,
+    .bar-label,
+    .bar-value {
+      fill: var(--text);
+      font-size: 14px;
+    }
+
+    .axis-label {
+      fill: var(--muted);
+      font-size: 12px;
+    }
+
+    .bar-label {
+      font-weight: 500;
+      text-anchor: end;
+    }
+
+    .bar-value {
+      font-weight: 600;
+    }
+
+    .bar {
+      fill: var(--orange);
+      transition: width 500ms ease;
+    }
+
+    .bar.bus {
+      fill: var(--blue);
+    }
+
+    .bar-group:hover {
+      opacity: 0.75;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      padding: 0 24px 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.walk {
+      background: var(--orange);
+    }
+
+    .legend-dot.bus {
+      background: var(--blue);
+    }
+
+    .note {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width: min(100% - 28px, 1000px);
+      }
+
+      main {
+        padding: 44px 0;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .field {
+        flex: 1 1 180px;
+        min-width: 0;
+      }
+
+      .summary {
+        flex-basis: 100%;
+        margin-left: 0;
+      }
+
+      .chart-wrap {
+        padding: 16px 8px 12px;
+      }
+
+      svg {
+        min-height: 320px;
+      }
+
+      .bar-label,
+      .bar-value {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a class="back-link" href="idea.html">
+        ← 返回 IDEA 文章
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="eyebrow">IDEA 可视化 · V1.0 估算数据</p>
+
+    <h1>从这里出发，要花多少分钟？</h1>
+
+    <p class="lead">
+      选择一个起点，比较它到各个已录入地点的预计最短时间。
+      条形越长，代表时间成本越高。
+    </p>
+
+    <section class="visual" aria-labelledby="chart-title">
+      <div class="toolbar">
+        <div class="field">
+          <label for="origin-select">选择起点</label>
+
+          <select id="origin-select" aria-label="选择起点">
+          </select>
+        </div>
+
+        <div class="summary" aria-live="polite">
+          当前最远可达：
+          <strong id="farthest-place">--</strong>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <h2 id="chart-title" class="sr-only">
+          路线预计时间条形图
+        </h2>
+
+        <svg
+          id="time-chart"
+          viewBox="0 0 1000 620"
+          role="img"
+          aria-labelledby="chart-title chart-description"
+        >
+          <desc id="chart-description">
+            显示从所选起点到其他校园节点的预计最短时间。
+          </desc>
+        </svg>
+      </div>
+
+      <div class="legend">
+        <span class="legend-item">
+          <i class="legend-dot walk"></i>
+          主要经过步行
+        </span>
+
+        <span class="legend-item">
+          <i class="legend-dot bus"></i>
+          路线包含校车
+        </span>
+      </div>
+    </section>
+
+    <p class="note">
+      注：路线和时间来自公开资料估算，校车路线未计入等车时间，
+      不能替代实时导航。
+    </p>
+  </main>
+
+  <script>
+    const nodes = [
+      { id: "Oran", name: "橘园" },
+      { id: "Peach", name: "桃园" },
+      { id: "Plum", name: "李园" },
+      { id: "Camph", name: "樟园" },
+      { id: "Apric", name: "杏园" },
+      { id: "PlumM", name: "梅园" },
+      { id: "Phoe", name: "楠园" },
+      { id: "Gate8", name: "八号门" },
+      { id: "Lib", name: "中心图书馆" },
+      { id: "Teach8", name: "八教" },
+      { id: "Teach2", name: "二教" }
+    ];
+
+    const edges = [
+      {
+        from: "Oran",
+        to: "Peach",
+        time: 15,
+        transport: "walk"
+      },
+      {
+        from: "Peach",
+        to: "Plum",
+        time: 10,
+        transport: "walk"
+      },
+      {
+        from: "Plum",
+        to: "Lib",
+        time: 25,
+        transport: "walk"
+      },
+      {
+        from: "Gate8",
+        to: "Teach8",
+        time: 5,
+        transport: "bus"
+      },
+      {
+        from: "Oran",
+        to: "Teach8",
+        time: 12,
+        transport: "bus"
+      },
+      {
+        from: "Phoe",
+        to: "Teach2",
+        time: 8,
+        transport: "bus"
+      },
+      {
+        from: "Oran",
+        to: "Plum",
+        time: 40,
+        transport: "walk"
+      },
+      {
+        from: "Camph",
+        to: "Lib",
+        time: 18,
+        transport: "walk"
+      },
+      {
+        from: "Teach8",
+        to: "Lib",
+        time: 15,
+        transport: "walk"
+      }
+    ];
+
+    const originSelect = document.getElementById("origin-select");
+    const farthestPlace = document.getElementById("farthest-place");
+    const chart = document.getElementById("time-chart");
+
+    const nodeMap = new Map(
+      nodes.map(function(node) {
+        return [node.id, node];
+      })
+    );
+
+    nodes.forEach(function(node) {
+      const option = document.createElement("option");
+      option.value = node.id;
+      option.textContent = node.name;
+      originSelect.appendChild(option);
+    });
+
+    originSelect.value = "Oran";
+
+    function shortestRoutes(originId) {
+      const distances = new Map(
+        nodes.map(function(node) {
+          return [node.id, Infinity];
+        })
+      );
+
+      const previous = new Map();
+      const queue = nodes.map(function(node) {
+        return node.id;
+      });
+
+      distances.set(originId, 0);
+
+      while (queue.length) {
+        queue.sort(function(a, b) {
+          return distances.get(a) - distances.get(b);
+        });
+
+        const current = queue.shift();
+
+        if (distances.get(current) === Infinity) {
+          break;
+        }
+
+        edges.forEach(function(edge) {
+          let neighbor = null;
+
+          if (edge.from === current) {
+            neighbor = edge.to;
+          }
+
+          if (edge.to === current) {
+            neighbor = edge.from;
+          }
+
+          if (!neighbor || !queue.includes(neighbor)) {
+            return;
+          }
+
+          const nextDistance =
+            distances.get(current) + edge.time;
+
+          if (nextDistance < distances.get(neighbor)) {
+            distances.set(neighbor, nextDistance);
+
+            previous.set(neighbor, {
+              node: current,
+              edge: edge
+            });
+          }
+        });
+      }
+
+      return nodes
+        .filter(function(node) {
+          return (
+            node.id !== originId &&
+            distances.get(node.id) !== Infinity
+          );
+        })
+        .map(function(node) {
+          const routeEdges = [];
+          let cursor = node.id;
+
+          while (cursor !== originId) {
+            const step = previous.get(cursor);
+
+            if (!step) {
+              break;
+            }
+
+            routeEdges.unshift(step.edge);
+            cursor = step.node;
+          }
+
+          return {
+            node: node,
+            time: distances.get(node.id),
+            transport: routeEdges.some(function(edge) {
+              return edge.transport === "bus";
+            })
+              ? "bus"
+              : "walk"
+          };
+        })
+        .sort(function(a, b) {
+          return b.time - a.time;
+        });
+    }
+
+    function svgElement(tag, attributes) {
+      const element = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        tag
+      );
+
+      Object.entries(attributes || {}).forEach(function(entry) {
+        element.setAttribute(entry[0], entry[1]);
+      });
+
+      return element;
+    }
+
+    function drawChart() {
+      const origin = nodeMap.get(originSelect.value);
+      const routes = shortestRoutes(origin.id);
+
+      const maxTime = Math.max(
+        50,
+        ...routes.map(function(route) {
+          return route.time;
+        })
+      );
+
+      const left = 205;
+      const right = 875;
+      const top = 74;
+      const rowHeight = 44;
+      const bottom = top + routes.length * rowHeight + 48;
+      const chartHeight = Math.max(360, bottom);
+
+      chart.setAttribute(
+        "viewBox",
+        "0 0 1000 " + chartHeight
+      );
+
+      chart.querySelectorAll(
+        ".chart-bg, .grid, .bars"
+      ).forEach(function(element) {
+        element.remove();
+      });
+
+      chart.insertBefore(
+        svgElement("rect", {
+          class: "chart-bg",
+          x: 0,
+          y: 0,
+          width: 1000,
+          height: chartHeight,
+          rx: 5
+        }),
+        chart.firstChild
+      );
+
+      const grid = svgElement("g", {
+        class: "grid",
+        "aria-hidden": "true"
+      });
+
+      [0, 10, 20, 30, 40, 50].forEach(function(tick) {
+        if (tick > maxTime) {
+          return;
+        }
+
+        const x =
+          left + ((right - left) * tick) / maxTime;
+
+        grid.appendChild(
+          svgElement("line", {
+            class: "grid-line",
+            x1: x,
+            y1: top - 28,
+            x2: x,
+            y2: bottom - 28
+          })
+        );
+
+        const tickLabel = svgElement("text", {
+          class: "axis-label",
+          x: x,
+          y: bottom - 10,
+          "text-anchor": "middle"
+        });
+
+        tickLabel.textContent = tick + " min";
+        grid.appendChild(tickLabel);
+      });
+
+      chart.appendChild(grid);
+
+      const bars = svgElement("g", {
+        class: "bars"
+      });
+
+      routes.forEach(function(route, index) {
+        const y = top + index * rowHeight;
+        const width =
+          ((right - left) * route.time) / maxTime;
+
+        const group = svgElement("g", {
+          class: "bar-group",
+          role: "img",
+          "aria-label":
+            route.node.name +
+            "，预计 " +
+            route.time +
+            " 分钟"
+        });
+
+        const name = svgElement("text", {
+          class: "bar-label",
+          x: 180,
+          y: y + 15
+        });
+
+        name.textContent = route.node.name;
+
+        const bar = svgElement("rect", {
+          class:
+            "bar " +
+            (route.transport === "bus" ? "bus" : ""),
+          x: left,
+          y: y,
+          width: 0,
+          height: 24,
+          rx: 3
+        });
+
+        const value = svgElement("text", {
+          class: "bar-value",
+          x: left + width + 12,
+          y: y + 17
+        });
+
+        value.textContent = route.time + " min";
+
+        group.append(name, bar, value);
+        bars.appendChild(group);
+
+        requestAnimationFrame(function() {
+          bar.setAttribute("width", width.toFixed(2));
+        });
+      });
+
+      chart.appendChild(bars);
+
+      const farthest = routes[0];
+
+      farthestPlace.textContent = farthest
+        ? farthest.node.name + " · " + farthest.time + " 分钟"
+        : "暂无连通路线";
+    }
+
+    originSelect.addEventListener("change", drawChart);
+
+    drawChart();
+  </script>
+</body>
+</html>
