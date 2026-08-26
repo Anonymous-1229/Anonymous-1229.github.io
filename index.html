@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GetUp — Xiaoyu's Personal Space</title>
   <meta name="description" content="Xiaoyu's personal space for projects, notes and things worth learning.">
-
   <style>
     :root {
       --bg: #f7f8fa;
@@ -40,35 +39,19 @@
       --shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       color: var(--text);
       background: var(--bg);
-      font-family: Arial, "Microsoft YaHei", sans-serif;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
       line-height: 1.7;
       transition: background var(--transition), color var(--transition);
     }
-
-    a {
-      color: inherit;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .container {
-      width: min(1040px, calc(100% - 40px));
-      margin: 0 auto;
-    }
+    a { color: inherit; }
+    button { font: inherit; }
+    .container { width: min(1040px, calc(100% - 40px)); margin: 0 auto; }
 
     .site-nav {
       position: sticky;
@@ -77,37 +60,27 @@
       background: var(--bg);
       border-bottom: 1px solid var(--line);
     }
-
     .nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       min-height: 68px;
     }
-
     .logo {
       color: var(--text);
       font-size: 16px;
       font-weight: 600;
+      letter-spacing: 0.02em;
       text-decoration: none;
     }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-
+    .nav-right { display: flex; align-items: center; gap: 22px; }
     .nav-right a {
       color: var(--text-soft);
       font-size: 14px;
       text-decoration: none;
+      transition: color var(--transition);
     }
-
-    .nav-right a:hover {
-      color: var(--text);
-    }
-
+    .nav-right a:hover { color: var(--text); }
     .theme-toggle,
     .tour-toggle {
       min-width: 40px;
@@ -120,7 +93,6 @@
       cursor: pointer;
       transition: border-color var(--transition), color var(--transition);
     }
-
     .theme-toggle:hover,
     .tour-toggle:hover,
     .tour-toggle.is-running {
@@ -128,10 +100,7 @@
       border-color: var(--accent);
     }
 
-    .hero {
-      padding: 88px 0 40px;
-    }
-
+    .hero { padding: 88px 0 40px; }
     .eyebrow {
       margin: 0 0 14px;
       color: var(--accent);
@@ -139,38 +108,21 @@
       font-weight: 600;
       letter-spacing: 0.04em;
     }
-
-    h1,
-    h2,
-    h3 {
-      line-height: 1.3;
-    }
-
+    h1, h2, h3 { line-height: 1.3; }
     h1 {
       max-width: 780px;
       margin: 0;
       font-size: 58px;
       font-weight: 600;
     }
-
     .hero-description {
       max-width: 660px;
       margin: 22px 0 0;
       color: var(--text-soft);
       font-size: 19px;
     }
-
-    .hero-description strong {
-      color: var(--text);
-    }
-
-    .hero-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 30px;
-    }
-
+    .hero-description strong { color: var(--text); font-weight: 600; }
+    .hero-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .hero-links a {
       padding: 9px 15px;
       color: var(--text);
@@ -181,17 +133,13 @@
       text-decoration: none;
       transition: border-color var(--transition), color var(--transition), transform var(--transition);
     }
-
     .hero-links a:hover {
       color: var(--accent);
       border-color: var(--accent);
       transform: translateY(-2px);
     }
 
-    .map-section {
-      margin-top: 40px;
-    }
-
+    .map-section { margin-top: 40px; }
     .section-heading {
       display: flex;
       align-items: end;
@@ -199,20 +147,8 @@
       gap: 22px;
       margin-bottom: 18px;
     }
-
-    .section-heading h2 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    .section-heading p {
-      max-width: 530px;
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 14px;
-    }
-
+    .section-heading h2 { margin: 0; font-size: 24px; font-weight: 600; }
+    .section-heading p { max-width: 530px; margin: 0; color: var(--text-soft); font-size: 14px; }
     .map-tool {
       overflow: hidden;
       background: var(--surface);
@@ -220,7 +156,6 @@
       border-radius: 8px;
       box-shadow: var(--shadow);
     }
-
     .map-toolbar {
       display: flex;
       align-items: center;
@@ -229,33 +164,11 @@
       padding: 15px 18px;
       border-bottom: 1px solid var(--line);
     }
-
-    .map-status {
-      min-height: 22px;
-      color: var(--text-soft);
-      font-size: 13px;
-    }
-
-    .map-status strong {
-      color: var(--text);
-    }
-
-    .map-frame {
-      padding: 10px 18px 18px;
-    }
-
-    .site-map {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1000 / 430;
-      min-height: 300px;
-    }
-
-    .map-bg {
-      fill: var(--surface);
-    }
-
+    .map-status { min-height: 22px; color: var(--text-soft); font-size: 13px; }
+    .map-status strong { color: var(--text); font-weight: 600; }
+    .map-frame { padding: 10px 18px 18px; }
+    .site-map { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 430; min-height: 300px; }
+    .map-bg { fill: var(--surface); }
     .map-line {
       fill: none;
       stroke: var(--line);
@@ -263,64 +176,24 @@
       stroke-dasharray: 5 8;
       stroke-linecap: round;
     }
-
     .map-line.is-active {
       stroke: var(--accent);
       stroke-width: 3;
       stroke-dasharray: 8 7;
       animation: line-flow 1.6s linear infinite;
     }
-
-    .map-node {
-      cursor: pointer;
-      outline: none;
-    }
-
+    .map-node { cursor: pointer; outline: none; }
     .map-node:focus-visible .map-circle,
-    .map-node:hover .map-circle {
-      stroke: var(--accent);
-      stroke-width: 4;
-    }
-
-    .map-circle {
-      stroke: var(--surface);
-      stroke-width: 5;
-      transition: stroke var(--transition), stroke-width var(--transition);
-    }
-
-    .map-circle.core {
-      fill: var(--text);
-    }
-
-    .map-circle.about {
-      fill: var(--green);
-    }
-
-    .map-circle.now {
-      fill: var(--warm);
-    }
-
-    .map-circle.projects {
-      fill: var(--purple);
-    }
-
-    .map-circle.notes {
-      fill: var(--accent);
-    }
-
-    .map-circle.contact {
-      fill: var(--text-soft);
-    }
-
-    .map-circle.stack {
-      fill: var(--teal);
-    }
-
-    .map-node.is-active .map-circle {
-      stroke: var(--text);
-      stroke-width: 6;
-    }
-
+    .map-node:hover .map-circle { stroke: var(--accent); stroke-width: 4; }
+    .map-circle { stroke: var(--surface); stroke-width: 5; transition: stroke var(--transition), stroke-width var(--transition); }
+    .map-circle.core { fill: var(--text); }
+    .map-circle.about { fill: var(--green); }
+    .map-circle.now { fill: var(--warm); }
+    .map-circle.projects { fill: var(--purple); }
+    .map-circle.notes { fill: var(--accent); }
+    .map-circle.contact { fill: var(--text-soft); }
+    .map-circle.stack { fill: var(--teal); }
+    .map-node.is-active .map-circle { stroke: var(--text); stroke-width: 6; }
     .map-pulse {
       fill: none;
       stroke: var(--accent);
@@ -330,20 +203,8 @@
       transform-origin: center;
       animation: pulse 2.6s ease-out infinite;
     }
-
-    .map-label {
-      fill: var(--text);
-      font-size: 15px;
-      font-weight: 600;
-      text-anchor: middle;
-    }
-
-    .map-label.sub {
-      fill: var(--text-soft);
-      font-size: 12px;
-      font-weight: 400;
-    }
-
+    .map-label { fill: var(--text); font-size: 15px; font-weight: 600; text-anchor: middle; }
+    .map-label.sub { fill: var(--text-soft); font-size: 12px; font-weight: 400; }
     .map-legend {
       display: flex;
       flex-wrap: wrap;
@@ -352,80 +213,24 @@
       color: var(--text-soft);
       font-size: 12px;
     }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .legend-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-    }
-
-    .legend-dot.green {
-      background: var(--green);
-    }
-
-    .legend-dot.warm {
-      background: var(--warm);
-    }
-
-    .legend-dot.purple {
-      background: var(--purple);
-    }
-
-    .legend-dot.blue {
-      background: var(--accent);
-    }
-
-    .legend-dot.teal {
-      background: var(--teal);
-    }
-
+    .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .legend-dot.green { background: var(--green); }
+    .legend-dot.warm { background: var(--warm); }
+    .legend-dot.purple { background: var(--purple); }
+    .legend-dot.blue { background: var(--accent); }
+    .legend-dot.teal { background: var(--teal); }
     @keyframes pulse {
-      0% {
-        opacity: 0.4;
-        transform: scale(0.75);
-      }
-
-      70%,
-      100% {
-        opacity: 0;
-        transform: scale(1.8);
-      }
+      0% { opacity: 0.4; transform: scale(0.75); }
+      70%, 100% { opacity: 0; transform: scale(1.8); }
     }
+    @keyframes line-flow { to { stroke-dashoffset: -30; } }
 
-    @keyframes line-flow {
-      to {
-        stroke-dashoffset: -30;
-      }
-    }
-
-    section.content-section {
-      margin-top: 88px;
-    }
-
-    .content-section > .section-heading {
-      margin-bottom: 22px;
-    }
-
-    .section-label {
-      color: var(--text-faint);
-      font-size: 12px;
-    }
-
-    p {
-      color: var(--text-soft);
-    }
-
-    .about-copy {
-      max-width: 730px;
-      margin: 0;
-    }
-
+    section.content-section { margin-top: 88px; }
+    .content-section > .section-heading { margin-bottom: 22px; }
+    .section-label { color: var(--text-faint); font-size: 12px; }
+    p { color: var(--text-soft); }
+    .about-copy { max-width: 730px; margin: 0; }
     .now-row {
       display: grid;
       grid-template-columns: 130px 1fr;
@@ -434,24 +239,9 @@
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
     }
-
-    .now-title {
-      color: var(--accent);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .now-row p {
-      max-width: 700px;
-      margin: 0;
-    }
-
-    .tech {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-    }
-
+    .now-title { color: var(--accent); font-size: 14px; font-weight: 600; }
+    .now-row p { max-width: 700px; margin: 0; }
+    .tech { display: flex; flex-wrap: wrap; gap: 9px; }
     .tech span {
       padding: 7px 11px;
       color: var(--text-soft);
@@ -460,18 +250,8 @@
       font-size: 13px;
       transition: color var(--transition), transform var(--transition);
     }
-
-    .tech span:hover {
-      color: var(--text);
-      transform: translateY(-2px);
-    }
-
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
+    .tech span:hover { color: var(--text); transform: translateY(-2px); }
+    .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
     .project {
       padding: 24px;
       background: var(--surface);
@@ -479,30 +259,10 @@
       border-radius: 8px;
       transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
     }
-
-    .project:hover {
-      border-color: var(--accent);
-      box-shadow: var(--shadow);
-      transform: translateY(-3px);
-    }
-
-    .project-number {
-      margin-bottom: 28px;
-      color: var(--text-faint);
-      font-size: 12px;
-    }
-
-    .project h3 {
-      margin: 0 0 9px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .project p {
-      margin: 0;
-      font-size: 14px;
-    }
-
+    .project:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-3px); }
+    .project-number { margin-bottom: 28px; color: var(--text-faint); font-size: 12px; }
+    .project h3 { margin: 0 0 9px; font-size: 18px; font-weight: 600; }
+    .project p { margin: 0; font-size: 14px; }
     .project-link {
       display: inline-block;
       margin-top: 18px;
@@ -510,15 +270,8 @@
       font-size: 14px;
       text-decoration: none;
     }
-
-    .project-link:hover {
-      text-decoration: underline;
-    }
-
-    .posts {
-      border-top: 1px solid var(--line);
-    }
-
+    .project-link:hover { text-decoration: underline; }
+    .posts { border-top: 1px solid var(--line); }
     .note-card {
       margin-top: 24px;
       padding: 24px;
@@ -527,43 +280,36 @@
       border-radius: 8px;
       transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
-
     .note-card:hover {
-      border-color: var(--accent);
+      border-color: var(--blue);
       box-shadow: var(--shadow);
       transform: translateY(-3px);
     }
-
     .note-meta {
       margin: 0 0 8px;
-      color: var(--accent);
+      color: var(--blue);
       font-size: 12px;
       font-weight: 600;
     }
-
     .note-card h3 {
       margin: 0 0 8px;
       font-size: 18px;
       font-weight: 600;
     }
-
     .note-card p:not(.note-meta) {
       margin: 0;
       font-size: 14px;
     }
-
     .note-card a {
       display: inline-block;
       margin-top: 16px;
-      color: var(--accent);
+      color: var(--blue);
       font-size: 14px;
       text-decoration: none;
     }
-
     .note-card a:hover {
       text-decoration: underline;
     }
-
     .post {
       display: flex;
       align-items: baseline;
@@ -574,59 +320,15 @@
       text-decoration: none;
       transition: padding-left var(--transition);
     }
-
-    .post:hover {
-      padding-left: 8px;
-    }
-
-    .post-title {
-      color: var(--text);
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .post-description {
-      margin-top: 4px;
-      color: var(--text-soft);
-      font-size: 14px;
-    }
-
-    .post-date {
-      flex: 0 0 auto;
-      color: var(--text-faint);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .contact {
-      padding: 28px 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .contact h2 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    .contact p {
-      max-width: 560px;
-      margin: 0;
-    }
-
-    .contact a {
-      display: inline-block;
-      margin-top: 16px;
-      color: var(--accent);
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    .contact a:hover {
-      text-decoration: underline;
-    }
-
+    .post:hover { padding-left: 8px; }
+    .post-title { color: var(--text); font-size: 16px; font-weight: 600; }
+    .post-description { margin-top: 4px; color: var(--text-soft); font-size: 14px; }
+    .post-date { flex: 0 0 auto; color: var(--text-faint); font-size: 13px; white-space: nowrap; }
+    .contact { padding: 28px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .contact h2 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+    .contact p { max-width: 560px; margin: 0; }
+    .contact a { display: inline-block; margin-top: 16px; color: var(--accent); font-size: 14px; text-decoration: none; }
+    .contact a:hover { text-decoration: underline; }
     footer {
       display: flex;
       justify-content: space-between;
@@ -637,78 +339,25 @@
       border-top: 1px solid var(--line);
       font-size: 13px;
     }
-
     @media (max-width: 650px) {
-      .container {
-        width: min(100% - 28px, 1040px);
-      }
-
-      .nav-right a {
-        display: none;
-      }
-
-      .hero {
-        padding-top: 56px;
-      }
-
-      h1 {
-        font-size: 38px;
-      }
-
-      .hero-description {
-        font-size: 17px;
-      }
-
-      .section-heading {
-        display: block;
-      }
-
-      .section-heading p {
-        margin-top: 8px;
-      }
-
-      .map-toolbar {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .site-map {
-        min-height: 285px;
-      }
-
-      .map-label {
-        font-size: 13px;
-      }
-
-      .map-label.sub {
-        font-size: 11px;
-      }
-
-      .now-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .projects {
-        grid-template-columns: 1fr;
-      }
-
-      .post {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      footer {
-        flex-direction: column;
-      }
+      .container { width: min(100% - 28px, 1040px); }
+      .nav-right a { display: none; }
+      .hero { padding-top: 56px; }
+      h1 { font-size: 38px; }
+      .hero-description { font-size: 17px; }
+      .section-heading { display: block; }
+      .section-heading p { margin-top: 8px; }
+      .map-toolbar { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .site-map { min-height: 285px; }
+      .map-label { font-size: 13px; }
+      .map-label.sub { font-size: 11px; }
+      .now-row { grid-template-columns: 1fr; gap: 8px; }
+      .projects { grid-template-columns: 1fr; }
+      .post { align-items: flex-start; flex-direction: column; gap: 4px; }
+      footer { flex-direction: column; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         scroll-behavior: auto !important;
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -722,7 +371,6 @@
   <nav class="site-nav">
     <div class="container nav-inner">
       <a class="logo" href="#top">GetUp</a>
-
       <div class="nav-right">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
@@ -736,27 +384,16 @@
     <section class="hero">
       <div class="container">
         <p class="eyebrow">PERSONAL SPACE / 2026</p>
-
         <h1>Xiaoyu.</h1>
-
         <p class="hero-description">
           A <strong>Computer Science student</strong> interested in software development,
           technology and learning how things work. This is a small space for projects,
           notes and the journey between them.
         </p>
-
         <div class="hero-links">
-          <a href="https://github.com/Anonymous-1229" target="_blank" rel="noopener">
-            GitHub ↗
-          </a>
-
-          <a href="#notes">
-            Read my notes
-          </a>
-
-          <a href="#contact">
-            Contact
-          </a>
+          <a href="https://github.com/Anonymous-1229" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="#notes">Read my notes</a>
+          <a href="#contact">Contact</a>
         </div>
       </div>
     </section>
@@ -767,24 +404,13 @@
           <h2 id="map-title">A map of this space</h2>
           <p>点击节点快速跳转。自动浏览会沿着主页的内容关系依次点亮。</p>
         </div>
-
         <div class="map-tool">
           <div class="map-toolbar">
             <div class="map-status" aria-live="polite">
-              当前查看：
-              <strong id="map-status-text">主页中心</strong>
+              当前查看：<strong id="map-status-text">主页中心</strong>
             </div>
-
-            <button
-              class="tour-toggle"
-              id="tourBtn"
-              type="button"
-              aria-pressed="false"
-            >
-              自动浏览
-            </button>
+            <button class="tour-toggle" id="tourBtn" type="button" aria-pressed="false">自动浏览</button>
           </div>
-
           <div class="map-frame">
             <svg
               id="site-map"
@@ -794,18 +420,8 @@
               aria-labelledby="site-map-title site-map-desc"
             >
               <title id="site-map-title">GetUp 博客主页内容关系图</title>
-              <desc id="site-map-desc">
-                中心节点连接 About、Now、Tech Stack、Projects、Notes 和 Contact 页面区域。
-              </desc>
-
-              <rect
-                class="map-bg"
-                x="0"
-                y="0"
-                width="1000"
-                height="430"
-              ></rect>
-
+              <desc id="site-map-desc">中心节点连接 About、Now、Tech Stack、Projects、Notes 和 Contact 页面区域。</desc>
+              <rect class="map-bg" x="0" y="0" width="1000" height="430"></rect>
               <g aria-hidden="true">
                 <line class="map-line" data-line="about" x1="500" y1="215" x2="190" y2="95"></line>
                 <line class="map-line" data-line="now" x1="500" y1="215" x2="350" y2="345"></line>
@@ -814,43 +430,36 @@
                 <line class="map-line" data-line="contact" x1="500" y1="215" x2="190" y2="345"></line>
                 <line class="map-line" data-line="stack" x1="500" y1="215" x2="620" y2="355"></line>
               </g>
-
               <g class="map-node" data-target="about" tabindex="0" role="button" aria-label="跳转到 About">
                 <circle class="map-circle about" cx="190" cy="95" r="25"></circle>
                 <text class="map-label" x="190" y="55">About</text>
                 <text class="map-label sub" x="190" y="137">背景</text>
               </g>
-
               <g class="map-node" data-target="now" tabindex="0" role="button" aria-label="跳转到 Now">
                 <circle class="map-circle now" cx="350" cy="345" r="25"></circle>
                 <text class="map-label" x="350" y="393">Now</text>
                 <text class="map-label sub" x="350" y="315">进行中</text>
               </g>
-
               <g class="map-node" data-target="projects" tabindex="0" role="button" aria-label="跳转到 Projects">
                 <circle class="map-circle projects" cx="760" cy="95" r="25"></circle>
                 <text class="map-label" x="760" y="55">Projects</text>
                 <text class="map-label sub" x="760" y="137">实践</text>
               </g>
-
               <g class="map-node" data-target="notes" tabindex="0" role="button" aria-label="跳转到 Notes">
                 <circle class="map-circle notes" cx="810" cy="315" r="25"></circle>
                 <text class="map-label" x="810" y="363">Notes</text>
                 <text class="map-label sub" x="810" y="285">记录</text>
               </g>
-
               <g class="map-node" data-target="contact" tabindex="0" role="button" aria-label="跳转到 Contact">
                 <circle class="map-circle contact" cx="190" cy="345" r="25"></circle>
                 <text class="map-label" x="190" y="393">Contact</text>
                 <text class="map-label sub" x="190" y="315">连接</text>
               </g>
-
               <g class="map-node" data-target="stack" tabindex="0" role="button" aria-label="跳转到 Tech Stack">
                 <circle class="map-circle stack" cx="620" cy="355" r="25"></circle>
                 <text class="map-label" x="620" y="405">Stack</text>
                 <text class="map-label sub" x="620" y="325">工具</text>
               </g>
-
               <g class="map-node is-active" data-target="top" tabindex="0" role="button" aria-label="回到主页中心">
                 <circle class="map-pulse" cx="500" cy="215" r="42"></circle>
                 <circle class="map-circle core" cx="500" cy="215" r="36"></circle>
@@ -859,32 +468,12 @@
               </g>
             </svg>
           </div>
-
           <div class="map-legend" aria-label="内容类型图例">
-            <span class="legend-item">
-              <i class="legend-dot green"></i>
-              个人背景
-            </span>
-
-            <span class="legend-item">
-              <i class="legend-dot warm"></i>
-              当前状态
-            </span>
-
-            <span class="legend-item">
-              <i class="legend-dot purple"></i>
-              项目实践
-            </span>
-
-            <span class="legend-item">
-              <i class="legend-dot blue"></i>
-              文章记录
-            </span>
-
-            <span class="legend-item">
-              <i class="legend-dot teal"></i>
-              技术栈
-            </span>
+            <span class="legend-item"><i class="legend-dot green"></i>个人背景</span>
+            <span class="legend-item"><i class="legend-dot warm"></i>当前状态</span>
+            <span class="legend-item"><i class="legend-dot purple"></i>项目实践</span>
+            <span class="legend-item"><i class="legend-dot blue"></i>文章记录</span>
+            <span class="legend-item"><i class="legend-dot teal"></i>技术栈</span>
           </div>
         </div>
       </div>
@@ -892,11 +481,7 @@
 
     <section class="content-section" id="about">
       <div class="container">
-        <div class="section-heading">
-          <h2>About</h2>
-          <span class="section-label">01</span>
-        </div>
-
+        <div class="section-heading"><h2>About</h2><span class="section-label">01</span></div>
         <p class="about-copy">
           I'm currently studying computer science and exploring programming,
           algorithms, web development and emerging technologies. This website
@@ -908,157 +493,66 @@
 
     <section class="content-section" id="now">
       <div class="container">
-        <div class="section-heading">
-          <h2>Now</h2>
-          <span class="section-label">02</span>
-        </div>
-
+        <div class="section-heading"><h2>Now</h2><span class="section-label">02</span></div>
         <div class="now-row">
           <div class="now-title">Currently</div>
-
-          <p>
-            Building my personal website, learning more about web development,
-            experimenting with code and keeping track of what I learn.
-          </p>
+          <p>Building my personal website, learning more about web development, experimenting with code and keeping track of what I learn.</p>
         </div>
       </div>
     </section>
 
     <section class="content-section" id="stack">
       <div class="container">
-        <div class="section-heading">
-          <h2>Tech Stack</h2>
-          <span class="section-label">03</span>
-        </div>
-
+        <div class="section-heading"><h2>Tech Stack</h2><span class="section-label">03</span></div>
         <div class="tech" aria-label="技术栈">
-          <span>HTML</span>
-          <span>CSS</span>
-          <span>JavaScript</span>
-          <span>Python</span>
-          <span>Git</span>
-          <span>GitHub</span>
-          <span>Linux</span>
-          <span>Algorithms</span>
+          <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span>
+          <span>Git</span><span>GitHub</span><span>Linux</span><span>Algorithms</span>
         </div>
       </div>
     </section>
 
     <section class="content-section" id="projects">
       <div class="container">
-        <div class="section-heading">
-          <h2>Projects</h2>
-          <span class="section-label">04</span>
-        </div>
-
+        <div class="section-heading"><h2>Projects</h2><span class="section-label">04</span></div>
         <div class="projects">
           <article class="project">
             <div class="project-number">PROJECT / 01</div>
-
             <h3>Campus Time Topology</h3>
-
-            <p>
-              A data-driven attempt to understand the time cost of moving
-              around Southwest University.
-            </p>
-
-            <a href="posts/idea.html" class="project-link">
-              Read the idea →
-            </a>
+            <p>A data-driven attempt to understand the time cost of moving around Southwest University.</p>
+            <a href="idea-campus-time.html" class="project-link">Read the idea →</a>
           </article>
-
           <article class="project">
             <div class="project-number">PROJECT / 02</div>
-
             <h3>Route Time Visualization</h3>
-
-            <p>
-              An interactive chart for comparing estimated travel time from
-              different campus locations.
-            </p>
-
-            <a href="idea-campus-time.html" class="project-link">
-              Open visualization →
-            </a>
+            <p>An interactive chart for comparing estimated travel time from different campus locations.</p>
+            <a href="idea-campus-time.html" class="project-link">Open visualization →</a>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="content-section" id="notes">
-      <div class="container">
-        <div class="section-heading">
-          <h2>Recent Notes</h2>
-          <span class="section-label">05</span>
-        </div>
+      <section class="content-section" id="notes">
+        <div class="container">
+          <div class="section-heading"><h2>Recent Notes</h2><span class="section-label">05</span></div>
 
-        <article class="note-card">
-          <p class="note-meta">IDEA · 2026.08.26</p>
+          <article class="note-card">
+            <p class="note-meta">IDEA · 2026.08.26</p>
+            <h3>西大上课时间成本可视化</h3>
+            <p>一个用动态条形图比较校园不同地点之间时间成本的小实验。</p>
+            <a href="idea-campus-time.html">查看可视化 →</a>
+          </article>
 
-          <h3>西大上课时间成本可视化</h3>
-
-          <p>
-            一个用动态条形图比较校园不同地点之间时间成本的小实验。
-          </p>
-
-          <a href="posts/idea-visualization.html">
-            查看可视化 →
-          </a>
-        </article>
-
-        <div class="posts">
+          <div class="posts">
           <a href="idea-campus-time.html" class="post">
-  <div>
-    <div class="post-title">
-      西大上课时间成本可视化
-    </div>
-
-    <div class="post-description">
-      一个用动态条形图比较校园不同地点之间时间成本的小实验。
-    </div>
-  </div>
-
-  <div class="post-date">Aug 2026</div>
-</a>
-          <a href="posts/idea.html" class="post">
-            <div>
-              <div class="post-title">
-                严肃搞怪｜西大上课时间成本拓扑图
-              </div>
-
-              <div class="post-description">
-                用数据思维把校园里的距离和体感变成时间成本。
-              </div>
-            </div>
-
+            <div><div class="post-title">严肃搞怪｜西大上课时间成本拓扑图</div><div class="post-description">用数据思维把校园里的距离和体感变成时间成本。</div></div>
             <div class="post-date">Aug 2026</div>
           </a>
-
-          <a href="posts/idea-visualization.html" class="post">
-            <div>
-              <div class="post-title">
-                路线时间成本可视化
-              </div>
-
-              <div class="post-description">
-                选择起点，比较到其他地点的预计最短时间。
-              </div>
-            </div>
-
+          <a href="idea-campus-time.html" class="post">
+            <div><div class="post-title">路线时间成本可视化</div><div class="post-description">选择起点，比较到其他地点的预计最短时间。</div></div>
             <div class="post-date">Aug 2026</div>
           </a>
-
           <a href="#contact" class="post">
-            <div>
-              <div class="post-title">
-                More notes are on the way
-              </div>
-
-              <div class="post-description">
-                学习、实验，以及那些还没有被整理好的想法。
-              </div>
-            </div>
-
+            <div><div class="post-title">More notes are on the way</div><div class="post-description">学习、实验，以及那些还没有被整理好的想法。</div></div>
             <div class="post-date">Soon</div>
           </a>
         </div>
@@ -1069,15 +563,8 @@
       <div class="container">
         <div class="contact">
           <h2>Let's connect.</h2>
-
-          <p>
-            I'm always interested in learning, building interesting things
-            and meeting people who enjoy technology.
-          </p>
-
-          <a href="mailto:your@email.com">
-            your@email.com →
-          </a>
+          <p>I'm always interested in learning, building interesting things and meeting people who enjoy technology.</p>
+          <a href="mailto:your@email.com">your@email.com →</a>
         </div>
       </div>
     </section>
@@ -1095,10 +582,7 @@
     const mapNodes = Array.from(document.querySelectorAll(".map-node"));
     const mapLines = Array.from(document.querySelectorAll(".map-line"));
     const sections = Array.from(document.querySelectorAll("section[id]"));
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let tourTimer = null;
     let tourIndex = -1;
     let manualTarget = null;
@@ -1112,92 +596,55 @@
         document.documentElement.removeAttribute("data-theme");
         themeBtn.textContent = "☾";
       }
-
-      themeBtn.setAttribute(
-        "aria-label",
-        nextTheme === "dark"
-          ? "切换到浅色主题"
-          : "切换到深色主题"
-      );
+      themeBtn.setAttribute("aria-label", nextTheme === "dark" ? "切换到浅色主题" : "切换到深色主题");
     }
 
     let theme = "light";
-
     try {
       theme = localStorage.getItem("getup-theme") || "light";
     } catch (error) {
       theme = "light";
     }
-
     setTheme(theme);
 
-    themeBtn.addEventListener("click", function () {
+    themeBtn.addEventListener("click", function() {
       theme = theme === "light" ? "dark" : "light";
-
       try {
         localStorage.setItem("getup-theme", theme);
       } catch (error) {
-        // 浏览器不支持本地存储时，当前页面仍然可以切换主题。
+        // The current visit still changes theme when storage is unavailable.
       }
-
       setTheme(theme);
     });
 
     function activateMapNode(targetId, shouldScroll) {
-      mapNodes.forEach(function (node) {
-        node.classList.toggle(
-          "is-active",
-          node.dataset.target === targetId
-        );
+      mapNodes.forEach(function(node) {
+        node.classList.toggle("is-active", node.dataset.target === targetId);
+      });
+      mapLines.forEach(function(line) {
+        line.classList.toggle("is-active", line.dataset.line === targetId);
       });
 
-      mapLines.forEach(function (line) {
-        line.classList.toggle(
-          "is-active",
-          line.dataset.line === targetId
-        );
-      });
-
-      const target = document.querySelector(
-        '[data-target="' + targetId + '"]'
-      );
-
-      const targetLabel = target
-        ? target.querySelector(".map-label").textContent
-        : "主页中心";
-
+      const target = document.querySelector("[data-target=\"" + targetId + "\"]");
+      const targetLabel = target ? target.querySelector(".map-label").textContent : "主页中心";
       mapStatus.textContent = targetLabel;
-
       if (shouldScroll) {
         manualTarget = targetId;
-
-        if (manualTargetTimer) {
-          window.clearTimeout(manualTargetTimer);
-        }
-
-        manualTargetTimer = window.setTimeout(function () {
+        if (manualTargetTimer) window.clearTimeout(manualTargetTimer);
+        manualTargetTimer = window.setTimeout(function() {
           manualTarget = null;
         }, 1200);
-
         const section = document.getElementById(targetId);
-
-        if (section) {
-          section.scrollIntoView({
-            behavior: reduceMotion ? "auto" : "smooth",
-            block: "start"
-          });
-        }
+        if (section) section.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
       }
     }
 
-    mapNodes.forEach(function (node) {
+    mapNodes.forEach(function(node) {
       function activateFromNode() {
         activateMapNode(node.dataset.target, true);
       }
-
       node.addEventListener("click", activateFromNode);
-
-      node.addEventListener("keydown", function (event) {
+      node.addEventListener("keydown", function(event) {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           activateFromNode();
@@ -1205,71 +652,42 @@
       });
     });
 
-    const observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (
-            entry.isIntersecting &&
-            !tourTimer &&
-            !manualTarget
-          ) {
-            activateMapNode(entry.target.id, false);
-          }
-        });
-      },
-      {
-        rootMargin: "-30% 0px -55% 0px",
-        threshold: 0
-      }
-    );
-
-    sections.forEach(function (section) {
-      observer.observe(section);
-    });
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !tourTimer && !manualTarget) activateMapNode(entry.target.id, false);
+      });
+    }, { rootMargin: "-30% 0px -55% 0px", threshold: 0 });
+    sections.forEach(function(section) { observer.observe(section); });
 
     function stopTour() {
       if (tourTimer) {
         window.clearInterval(tourTimer);
         tourTimer = null;
       }
-
       tourBtn.classList.remove("is-running");
       tourBtn.setAttribute("aria-pressed", "false");
       tourBtn.textContent = "自动浏览";
     }
 
     function advanceTour() {
-      const targets = [
-        "about",
-        "now",
-        "stack",
-        "projects",
-        "notes",
-        "contact"
-      ];
-
+      const targets = ["about", "now", "stack", "projects", "notes", "contact"];
       tourIndex = (tourIndex + 1) % targets.length;
       activateMapNode(targets[tourIndex], true);
     }
 
-    tourBtn.addEventListener("click", function () {
+    tourBtn.addEventListener("click", function() {
       if (tourTimer) {
         stopTour();
         return;
       }
-
       tourBtn.classList.add("is-running");
       tourBtn.setAttribute("aria-pressed", "true");
       tourBtn.textContent = "停止浏览";
-
       advanceTour();
-
       tourTimer = window.setInterval(advanceTour, 2200);
     });
 
-    if (reduceMotion) {
-      stopTour();
-    }
+    if (reduceMotion) stopTour();
   </script>
 </body>
 </html>
