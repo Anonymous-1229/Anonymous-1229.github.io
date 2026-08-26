@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>GetUp — Xiaoyu's Personal Space</title>
-  <meta name="description" content="Xiaoyu's personal website.">
+  <meta name="description" content="Xiaoyu's personal space for projects, notes and things worth learning.">
 
   <style>
     :root {
       --bg: #f7f8fa;
       --surface: #ffffff;
-      --soft: #f0f3f7;
+      --surface-soft: #f0f3f7;
       --text: #18202b;
-      --muted: #687384;
-      --faint: #98a1ad;
+      --text-soft: #687384;
+      --text-faint: #98a1ad;
       --line: #dfe4ea;
-      --blue: #2563eb;
-      --orange: #d97706;
+      --accent: #2563eb;
+      --warm: #d97706;
       --green: #16845d;
       --purple: #7956b8;
       --teal: #0f8b8d;
       --shadow: 0 18px 42px rgba(24, 32, 43, 0.08);
+      --transition: 180ms ease;
     }
 
     [data-theme="dark"] {
       --bg: #10151c;
       --surface: #171e28;
-      --soft: #202a37;
+      --surface-soft: #202a37;
       --text: #f1f5f9;
-      --muted: #a7b2c2;
-      --faint: #718096;
+      --text-soft: #a7b2c2;
+      --text-faint: #718096;
       --line: #2c3745;
-      --blue: #76a7ff;
-      --orange: #f0a54b;
+      --accent: #76a7ff;
+      --warm: #f0a54b;
       --green: #5bc99a;
       --purple: #b39ae6;
       --teal: #61d2d0;
@@ -54,7 +54,7 @@
       background: var(--bg);
       font-family: Arial, "Microsoft YaHei", sans-serif;
       line-height: 1.7;
-      transition: background 0.2s, color 0.2s;
+      transition: background var(--transition), color var(--transition);
     }
 
     a {
@@ -87,6 +87,7 @@
 
     .logo {
       color: var(--text);
+      font-size: 16px;
       font-weight: 600;
       text-decoration: none;
     }
@@ -98,43 +99,45 @@
     }
 
     .nav-right a {
-      color: var(--muted);
+      color: var(--text-soft);
       font-size: 14px;
       text-decoration: none;
     }
 
     .nav-right a:hover {
-      color: var(--blue);
+      color: var(--text);
     }
 
     .theme-toggle,
     .tour-toggle {
+      min-width: 40px;
       min-height: 40px;
-      padding: 8px 12px;
+      padding: 7px 11px;
       color: var(--text);
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 5px;
       cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
     }
 
     .theme-toggle:hover,
     .tour-toggle:hover,
     .tour-toggle.is-running {
-      color: var(--blue);
-      border-color: var(--blue);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .hero {
-      padding: 86px 0 42px;
+      padding: 88px 0 40px;
     }
 
     .eyebrow {
       margin: 0 0 14px;
-      color: var(--blue);
+      color: var(--accent);
       font-size: 13px;
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
 
     h1,
@@ -144,16 +147,17 @@
     }
 
     h1 {
+      max-width: 780px;
       margin: 0;
-      font-size: 54px;
+      font-size: 58px;
       font-weight: 600;
     }
 
     .hero-description {
-      max-width: 680px;
+      max-width: 660px;
       margin: 22px 0 0;
-      color: var(--muted);
-      font-size: 18px;
+      color: var(--text-soft);
+      font-size: 19px;
     }
 
     .hero-description strong {
@@ -164,32 +168,35 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 28px;
+      margin-top: 30px;
     }
 
     .hero-links a {
       padding: 9px 15px;
+      color: var(--text);
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 5px;
       font-size: 14px;
       text-decoration: none;
+      transition: border-color var(--transition), color var(--transition), transform var(--transition);
     }
 
     .hero-links a:hover {
-      color: var(--blue);
-      border-color: var(--blue);
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
     }
 
     .map-section {
-      margin-top: 36px;
+      margin-top: 40px;
     }
 
     .section-heading {
       display: flex;
       align-items: end;
       justify-content: space-between;
-      gap: 20px;
+      gap: 22px;
       margin-bottom: 18px;
     }
 
@@ -200,9 +207,9 @@
     }
 
     .section-heading p {
-      max-width: 540px;
+      max-width: 530px;
       margin: 0;
-      color: var(--muted);
+      color: var(--text-soft);
       font-size: 14px;
     }
 
@@ -218,12 +225,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 20px;
       padding: 15px 18px;
       border-bottom: 1px solid var(--line);
     }
 
     .map-status {
-      color: var(--muted);
+      min-height: 22px;
+      color: var(--text-soft);
       font-size: 13px;
     }
 
@@ -232,14 +241,15 @@
     }
 
     .map-frame {
-      padding: 12px 18px 18px;
+      padding: 10px 18px 18px;
     }
 
     .site-map {
       display: block;
       width: 100%;
-      min-height: 300px;
+      height: auto;
       aspect-ratio: 1000 / 430;
+      min-height: 300px;
     }
 
     .map-bg {
@@ -251,12 +261,14 @@
       stroke: var(--line);
       stroke-width: 2;
       stroke-dasharray: 5 8;
+      stroke-linecap: round;
     }
 
     .map-line.is-active {
-      stroke: var(--blue);
+      stroke: var(--accent);
       stroke-width: 3;
-      animation: line-flow 1.5s linear infinite;
+      stroke-dasharray: 8 7;
+      animation: line-flow 1.6s linear infinite;
     }
 
     .map-node {
@@ -264,17 +276,16 @@
       outline: none;
     }
 
+    .map-node:focus-visible .map-circle,
+    .map-node:hover .map-circle {
+      stroke: var(--accent);
+      stroke-width: 4;
+    }
+
     .map-circle {
       stroke: var(--surface);
       stroke-width: 5;
-      transition: stroke 0.2s, stroke-width 0.2s;
-    }
-
-    .map-node:hover .map-circle,
-    .map-node:focus-visible .map-circle,
-    .map-node.is-active .map-circle {
-      stroke: var(--text);
-      stroke-width: 6;
+      transition: stroke var(--transition), stroke-width var(--transition);
     }
 
     .map-circle.core {
@@ -286,11 +297,7 @@
     }
 
     .map-circle.now {
-      fill: var(--orange);
-    }
-
-    .map-circle.stack {
-      fill: var(--teal);
+      fill: var(--warm);
     }
 
     .map-circle.projects {
@@ -298,18 +305,30 @@
     }
 
     .map-circle.notes {
-      fill: var(--blue);
+      fill: var(--accent);
     }
 
     .map-circle.contact {
-      fill: var(--muted);
+      fill: var(--text-soft);
+    }
+
+    .map-circle.stack {
+      fill: var(--teal);
+    }
+
+    .map-node.is-active .map-circle {
+      stroke: var(--text);
+      stroke-width: 6;
     }
 
     .map-pulse {
       fill: none;
-      stroke: var(--blue);
+      stroke: var(--accent);
       stroke-width: 2;
-      animation: pulse 2.5s ease-out infinite;
+      opacity: 0.25;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pulse 2.6s ease-out infinite;
     }
 
     .map-label {
@@ -320,7 +339,7 @@
     }
 
     .map-label.sub {
-      fill: var(--muted);
+      fill: var(--text-soft);
       font-size: 12px;
       font-weight: 400;
     }
@@ -330,7 +349,7 @@
       flex-wrap: wrap;
       gap: 12px 20px;
       padding: 0 18px 18px;
-      color: var(--muted);
+      color: var(--text-soft);
       font-size: 12px;
     }
 
@@ -346,38 +365,36 @@
       border-radius: 50%;
     }
 
-    .green {
+    .legend-dot.green {
       background: var(--green);
     }
 
-    .orange {
-      background: var(--orange);
+    .legend-dot.warm {
+      background: var(--warm);
     }
 
-    .teal {
-      background: var(--teal);
-    }
-
-    .purple {
+    .legend-dot.purple {
       background: var(--purple);
     }
 
-    .blue {
-      background: var(--blue);
+    .legend-dot.blue {
+      background: var(--accent);
+    }
+
+    .legend-dot.teal {
+      background: var(--teal);
     }
 
     @keyframes pulse {
       0% {
         opacity: 0.4;
         transform: scale(0.75);
-        transform-origin: center;
       }
 
       70%,
       100% {
         opacity: 0;
         transform: scale(1.8);
-        transform-origin: center;
       }
     }
 
@@ -388,16 +405,20 @@
     }
 
     section.content-section {
-      margin-top: 86px;
+      margin-top: 88px;
+    }
+
+    .content-section > .section-heading {
+      margin-bottom: 22px;
     }
 
     .section-label {
-      color: var(--faint);
+      color: var(--text-faint);
       font-size: 12px;
     }
 
     p {
-      color: var(--muted);
+      color: var(--text-soft);
     }
 
     .about-copy {
@@ -415,7 +436,7 @@
     }
 
     .now-title {
-      color: var(--blue);
+      color: var(--accent);
       font-size: 14px;
       font-weight: 600;
     }
@@ -433,10 +454,16 @@
 
     .tech span {
       padding: 7px 11px;
-      color: var(--muted);
-      background: var(--soft);
+      color: var(--text-soft);
+      background: var(--surface-soft);
       border-radius: 4px;
       font-size: 13px;
+      transition: color var(--transition), transform var(--transition);
+    }
+
+    .tech span:hover {
+      color: var(--text);
+      transform: translateY(-2px);
     }
 
     .projects {
@@ -450,18 +477,18 @@
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 8px;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
     }
 
     .project:hover {
-      border-color: var(--blue);
+      border-color: var(--accent);
       box-shadow: var(--shadow);
       transform: translateY(-3px);
     }
 
     .project-number {
-      margin-bottom: 26px;
-      color: var(--faint);
+      margin-bottom: 28px;
+      color: var(--text-faint);
       font-size: 12px;
     }
 
@@ -479,7 +506,7 @@
     .project-link {
       display: inline-block;
       margin-top: 18px;
-      color: var(--blue);
+      color: var(--accent);
       font-size: 14px;
       text-decoration: none;
     }
@@ -492,6 +519,51 @@
       border-top: 1px solid var(--line);
     }
 
+    .note-card {
+      margin-top: 24px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .note-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow);
+      transform: translateY(-3px);
+    }
+
+    .note-meta {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .note-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .note-card p:not(.note-meta) {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .note-card a {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--accent);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .note-card a:hover {
+      text-decoration: underline;
+    }
+
     .post {
       display: flex;
       align-items: baseline;
@@ -500,6 +572,7 @@
       padding: 20px 0;
       border-bottom: 1px solid var(--line);
       text-decoration: none;
+      transition: padding-left var(--transition);
     }
 
     .post:hover {
@@ -514,12 +587,13 @@
 
     .post-description {
       margin-top: 4px;
-      color: var(--muted);
+      color: var(--text-soft);
       font-size: 14px;
     }
 
     .post-date {
-      color: var(--faint);
+      flex: 0 0 auto;
+      color: var(--text-faint);
       font-size: 13px;
       white-space: nowrap;
     }
@@ -544,17 +618,22 @@
     .contact a {
       display: inline-block;
       margin-top: 16px;
-      color: var(--blue);
+      color: var(--accent);
+      font-size: 14px;
       text-decoration: none;
+    }
+
+    .contact a:hover {
+      text-decoration: underline;
     }
 
     footer {
       display: flex;
       justify-content: space-between;
       gap: 16px;
-      margin-top: 86px;
+      margin-top: 88px;
       padding: 24px 0 44px;
-      color: var(--faint);
+      color: var(--text-faint);
       border-top: 1px solid var(--line);
       font-size: 13px;
     }
@@ -569,7 +648,7 @@
       }
 
       .hero {
-        padding-top: 54px;
+        padding-top: 56px;
       }
 
       h1 {
@@ -595,7 +674,7 @@
       }
 
       .site-map {
-        min-height: 280px;
+        min-height: 285px;
       }
 
       .map-label {
@@ -630,9 +709,10 @@
       *,
       *::before,
       *::after {
-        animation: none !important;
         scroll-behavior: auto !important;
-        transition: none !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -647,9 +727,7 @@
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
         <a href="#notes">Notes</a>
-        <button id="themeBtn" class="theme-toggle" type="button">
-          ☾
-        </button>
+        <button class="theme-toggle" id="themeBtn" type="button" aria-label="切换主题">☾</button>
       </div>
     </div>
   </nav>
@@ -662,9 +740,9 @@
         <h1>Xiaoyu.</h1>
 
         <p class="hero-description">
-          A <strong>Computer Science student</strong> interested in software
-          development, technology and learning how things work. This is a small
-          space for projects, notes and the journey between them.
+          A <strong>Computer Science student</strong> interested in software development,
+          technology and learning how things work. This is a small space for projects,
+          notes and the journey between them.
         </p>
 
         <div class="hero-links">
@@ -687,9 +765,7 @@
       <div class="container">
         <div class="section-heading">
           <h2 id="map-title">A map of this space</h2>
-          <p>
-            点击节点可以快速跳转。自动浏览会依次点亮主页的不同内容。
-          </p>
+          <p>点击节点快速跳转。自动浏览会沿着主页的内容关系依次点亮。</p>
         </div>
 
         <div class="map-tool">
@@ -699,7 +775,12 @@
               <strong id="map-status-text">主页中心</strong>
             </div>
 
-            <button id="tourBtn" class="tour-toggle" type="button" aria-pressed="false">
+            <button
+              class="tour-toggle"
+              id="tourBtn"
+              type="button"
+              aria-pressed="false"
+            >
               自动浏览
             </button>
           </div>
@@ -713,31 +794,25 @@
               aria-labelledby="site-map-title site-map-desc"
             >
               <title id="site-map-title">GetUp 博客主页内容关系图</title>
-
               <desc id="site-map-desc">
-                中心节点连接 About、Now、Tech Stack、Projects、Notes 和 Contact。
+                中心节点连接 About、Now、Tech Stack、Projects、Notes 和 Contact 页面区域。
               </desc>
 
-              <rect class="map-bg" x="0" y="0" width="1000" height="430"></rect>
+              <rect
+                class="map-bg"
+                x="0"
+                y="0"
+                width="1000"
+                height="430"
+              ></rect>
 
               <g aria-hidden="true">
-                <line class="map-line" data-line="about"
-                  x1="500" y1="215" x2="190" y2="95"></line>
-
-                <line class="map-line" data-line="now"
-                  x1="500" y1="215" x2="350" y2="345"></line>
-
-                <line class="map-line" data-line="stack"
-                  x1="500" y1="215" x2="620" y2="355"></line>
-
-                <line class="map-line" data-line="projects"
-                  x1="500" y1="215" x2="760" y2="95"></line>
-
-                <line class="map-line" data-line="notes"
-                  x1="500" y1="215" x2="810" y2="315"></line>
-
-                <line class="map-line" data-line="contact"
-                  x1="500" y1="215" x2="190" y2="345"></line>
+                <line class="map-line" data-line="about" x1="500" y1="215" x2="190" y2="95"></line>
+                <line class="map-line" data-line="now" x1="500" y1="215" x2="350" y2="345"></line>
+                <line class="map-line" data-line="projects" x1="500" y1="215" x2="760" y2="95"></line>
+                <line class="map-line" data-line="notes" x1="500" y1="215" x2="810" y2="315"></line>
+                <line class="map-line" data-line="contact" x1="500" y1="215" x2="190" y2="345"></line>
+                <line class="map-line" data-line="stack" x1="500" y1="215" x2="620" y2="355"></line>
               </g>
 
               <g class="map-node" data-target="about" tabindex="0" role="button" aria-label="跳转到 About">
@@ -750,12 +825,6 @@
                 <circle class="map-circle now" cx="350" cy="345" r="25"></circle>
                 <text class="map-label" x="350" y="393">Now</text>
                 <text class="map-label sub" x="350" y="315">进行中</text>
-              </g>
-
-              <g class="map-node" data-target="stack" tabindex="0" role="button" aria-label="跳转到 Tech Stack">
-                <circle class="map-circle stack" cx="620" cy="355" r="25"></circle>
-                <text class="map-label" x="620" y="405">Stack</text>
-                <text class="map-label sub" x="620" y="325">工具</text>
               </g>
 
               <g class="map-node" data-target="projects" tabindex="0" role="button" aria-label="跳转到 Projects">
@@ -776,6 +845,12 @@
                 <text class="map-label sub" x="190" y="315">连接</text>
               </g>
 
+              <g class="map-node" data-target="stack" tabindex="0" role="button" aria-label="跳转到 Tech Stack">
+                <circle class="map-circle stack" cx="620" cy="355" r="25"></circle>
+                <text class="map-label" x="620" y="405">Stack</text>
+                <text class="map-label sub" x="620" y="325">工具</text>
+              </g>
+
               <g class="map-node is-active" data-target="top" tabindex="0" role="button" aria-label="回到主页中心">
                 <circle class="map-pulse" cx="500" cy="215" r="42"></circle>
                 <circle class="map-circle core" cx="500" cy="215" r="36"></circle>
@@ -785,20 +860,15 @@
             </svg>
           </div>
 
-          <div class="map-legend">
+          <div class="map-legend" aria-label="内容类型图例">
             <span class="legend-item">
               <i class="legend-dot green"></i>
               个人背景
             </span>
 
             <span class="legend-item">
-              <i class="legend-dot orange"></i>
+              <i class="legend-dot warm"></i>
               当前状态
-            </span>
-
-            <span class="legend-item">
-              <i class="legend-dot teal"></i>
-              技术栈
             </span>
 
             <span class="legend-item">
@@ -809,6 +879,11 @@
             <span class="legend-item">
               <i class="legend-dot blue"></i>
               文章记录
+            </span>
+
+            <span class="legend-item">
+              <i class="legend-dot teal"></i>
+              技术栈
             </span>
           </div>
         </div>
@@ -856,7 +931,7 @@
           <span class="section-label">03</span>
         </div>
 
-        <div class="tech">
+        <div class="tech" aria-label="技术栈">
           <span>HTML</span>
           <span>CSS</span>
           <span>JavaScript</span>
@@ -916,6 +991,20 @@
           <h2>Recent Notes</h2>
           <span class="section-label">05</span>
         </div>
+
+        <article class="note-card">
+          <p class="note-meta">IDEA · 2026.08.26</p>
+
+          <h3>西大上课时间成本可视化</h3>
+
+          <p>
+            一个用动态条形图比较校园不同地点之间时间成本的小实验。
+          </p>
+
+          <a href="posts/idea-visualization.html">
+            查看可视化 →
+          </a>
+        </article>
 
         <div class="posts">
           <a href="posts/idea.html" class="post">
@@ -993,21 +1082,14 @@
     const mapNodes = Array.from(document.querySelectorAll(".map-node"));
     const mapLines = Array.from(document.querySelectorAll(".map-line"));
     const sections = Array.from(document.querySelectorAll("section[id]"));
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-    const reduceMotion =
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let theme = "light";
     let tourTimer = null;
     let tourIndex = -1;
     let manualTarget = null;
     let manualTargetTimer = null;
-
-    try {
-      theme = localStorage.getItem("getup-theme") || "light";
-    } catch (error) {
-      theme = "light";
-    }
 
     function setTheme(nextTheme) {
       if (nextTheme === "dark") {
@@ -1026,29 +1108,37 @@
       );
     }
 
+    let theme = "light";
+
+    try {
+      theme = localStorage.getItem("getup-theme") || "light";
+    } catch (error) {
+      theme = "light";
+    }
+
     setTheme(theme);
 
-    themeBtn.addEventListener("click", function() {
+    themeBtn.addEventListener("click", function () {
       theme = theme === "light" ? "dark" : "light";
 
       try {
         localStorage.setItem("getup-theme", theme);
       } catch (error) {
-        // 当前访问仍然可以切换主题。
+        // 浏览器不支持本地存储时，当前页面仍然可以切换主题。
       }
 
       setTheme(theme);
     });
 
     function activateMapNode(targetId, shouldScroll) {
-      mapNodes.forEach(function(node) {
+      mapNodes.forEach(function (node) {
         node.classList.toggle(
           "is-active",
           node.dataset.target === targetId
         );
       });
 
-      mapLines.forEach(function(line) {
+      mapLines.forEach(function (line) {
         line.classList.toggle(
           "is-active",
           line.dataset.line === targetId
@@ -1056,7 +1146,7 @@
       });
 
       const target = document.querySelector(
-        "[data-target=\"" + targetId + "\"]"
+        '[data-target="' + targetId + '"]'
       );
 
       const targetLabel = target
@@ -1072,7 +1162,7 @@
           window.clearTimeout(manualTargetTimer);
         }
 
-        manualTargetTimer = window.setTimeout(function() {
+        manualTargetTimer = window.setTimeout(function () {
           manualTarget = null;
         }, 1200);
 
@@ -1087,14 +1177,14 @@
       }
     }
 
-    mapNodes.forEach(function(node) {
+    mapNodes.forEach(function (node) {
       function activateFromNode() {
         activateMapNode(node.dataset.target, true);
       }
 
       node.addEventListener("click", activateFromNode);
 
-      node.addEventListener("keydown", function(event) {
+      node.addEventListener("keydown", function (event) {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           activateFromNode();
@@ -1102,22 +1192,25 @@
       });
     });
 
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (
-          entry.isIntersecting &&
-          !tourTimer &&
-          !manualTarget
-        ) {
-          activateMapNode(entry.target.id, false);
-        }
-      });
-    }, {
-      rootMargin: "-30% 0px -55% 0px",
-      threshold: 0
-    });
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (
+            entry.isIntersecting &&
+            !tourTimer &&
+            !manualTarget
+          ) {
+            activateMapNode(entry.target.id, false);
+          }
+        });
+      },
+      {
+        rootMargin: "-30% 0px -55% 0px",
+        threshold: 0
+      }
+    );
 
-    sections.forEach(function(section) {
+    sections.forEach(function (section) {
       observer.observe(section);
     });
 
@@ -1146,7 +1239,7 @@
       activateMapNode(targets[tourIndex], true);
     }
 
-    tourBtn.addEventListener("click", function() {
+    tourBtn.addEventListener("click", function () {
       if (tourTimer) {
         stopTour();
         return;
@@ -1157,6 +1250,7 @@
       tourBtn.textContent = "停止浏览";
 
       advanceTour();
+
       tourTimer = window.setInterval(advanceTour, 2200);
     });
 
