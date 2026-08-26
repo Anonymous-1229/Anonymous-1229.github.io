@@ -1,893 +1,1168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Xiaoyu — Personal Website</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --bg: #fafafa;
-    --card: rgba(255,255,255,0.78);
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --text-tertiary: #9ca3af;
-    --border: #e5e7eb;
-    --accent: #2563eb;
-    --accent-light: #eff6ff;
-    --tag-bg: #f3f4f6;
-    --shadow: 0 10px 30px rgba(0,0,0,0.05);
-    --transition: 0.25s ease;
-}
-
-[data-theme="dark"] {
-    --bg: #0b1120;
-    --card: rgba(15,23,42,0.78);
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-tertiary: #64748b;
-    --border: #1e293b;
-    --accent: #60a5fa;
-    --accent-light: #172554;
-    --tag-bg: #1e293b;
-    --shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    background: var(--bg);
-    color: var(--text-primary);
-    line-height: 1.6;
-
-    transition:
-        background var(--transition),
-        color var(--transition);
-
-    background-image:
-        linear-gradient(
-            rgba(128,128,128,0.05) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(128,128,128,0.05) 1px,
-            transparent 1px
-        );
-
-    background-size: 40px 40px;
-}
-
-a {
-    color: inherit;
-}
-
-button {
-    font-family: inherit;
-}
-
-/* Navigation */
-
-nav {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    width: min(900px, calc(100% - 36px));
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 10px 12px 10px 18px;
-
-    border: 1px solid var(--border);
-    border-radius: 999px;
-
-    background: var(--card);
-    backdrop-filter: blur(15px);
-
-    box-shadow: var(--shadow);
-
-    z-index: 100;
-}
-
-.logo {
-    font-weight: 700;
-    font-size: 15px;
-    text-decoration: none;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-right a {
-    font-size: 14px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.nav-right a:hover {
-    color: var(--text-primary);
-}
-
-.theme-toggle {
-    border: none;
-    background: var(--tag-bg);
-    color: var(--text-primary);
-
-    padding: 7px 12px;
-    border-radius: 999px;
-
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.theme-toggle:hover {
-    transform: translateY(-2px);
-}
-
-/* Main */
-
-main {
-    width: min(900px, calc(100% - 36px));
-    margin: auto;
-    padding: 150px 0 80px;
-}
-
-/* Hero */
-
-.hero {
-    position: relative;
-    padding: 55px 0 65px;
-    overflow: hidden;
-}
-
-.hero::before {
-    content: "";
-
-    position: absolute;
-
-    width: 260px;
-    height: 260px;
-
-    background: var(--accent);
-    opacity: 0.08;
-
-    border-radius: 50%;
-    filter: blur(60px);
-
-    top: -100px;
-    right: -50px;
-
-    pointer-events: none;
-}
-
-.avatar {
-    width: 62px;
-    height: 62px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 18px;
-
-    background: var(--text-primary);
-    color: var(--bg);
-
-    font-size: 24px;
-    font-weight: 700;
-
-    margin-bottom: 25px;
-
-    box-shadow: var(--shadow);
-}
-
-.hello {
-    color: var(--accent);
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-
-h1 {
-    font-size: clamp(48px, 8vw, 76px);
-    line-height: 1;
-    letter-spacing: -4px;
-    margin-bottom: 20px;
-}
-
-.hero-description {
-    max-width: 650px;
-
-    color: var(--text-secondary);
-
-    font-size: 20px;
-    line-height: 1.7;
-}
-
-.hero-description strong {
-    color: var(--text-primary);
-}
-
-.hero-links {
-    display: flex;
-    gap: 12px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-
-.hero-links a {
-    text-decoration: none;
-
-    border: 1px solid var(--border);
-
-    padding: 9px 17px;
-
-    border-radius: 999px;
-
-    font-size: 14px;
-
-    background: var(--card);
-
-    transition: var(--transition);
-}
-
-.hero-links a:hover {
-    transform: translateY(-2px);
-    border-color: var(--text-primary);
-}
-
-/* Sections */
-
-section {
-    margin-top: 85px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 25px;
-}
-
-h2 {
-    font-size: 25px;
-    letter-spacing: -0.5px;
-}
-
-.section-label {
-    color: var(--text-tertiary);
-    font-size: 13px;
-}
-
-p {
-    color: var(--text-secondary);
-    line-height: 1.8;
-}
-
-/* Now */
-
-.now-card {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-
-    gap: 30px;
-
-    padding: 28px;
-
-    border: 1px solid var(--border);
-    border-radius: 18px;
-
-    background: var(--card);
-    backdrop-filter: blur(10px);
-
-    transition: var(--transition);
-}
-
-.now-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-}
-
-.now-title {
-    color: var(--accent);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-/* Tech */
-
-.tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-}
-
-.tech span {
-    padding: 8px 13px;
-
-    border-radius: 9px;
-
-    background: var(--tag-bg);
-
-    font-size: 13px;
-    color: var(--text-secondary);
-
-    transition: var(--transition);
-}
-
-.tech span:hover {
-    transform: translateY(-3px);
-    color: var(--text-primary);
-}
-
-/* Projects */
-
-.projects {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-}
-
-.project {
-    padding: 25px;
-
-    border: 1px solid var(--border);
-    border-radius: 18px;
-
-    background: var(--card);
-    backdrop-filter: blur(10px);
-
-    transition: var(--transition);
-}
-
-.project:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
-}
-
-.project-number {
-    color: var(--text-tertiary);
-    font-size: 12px;
-    margin-bottom: 30px;
-}
-
-.project h3 {
-    font-size: 19px;
-    margin-bottom: 10px;
-}
-
-.project p {
-    font-size: 14px;
-}
-
-.project-link {
-    display: inline-block;
-
-    margin-top: 20px;
-
-    color: var(--accent);
-    font-size: 14px;
-    text-decoration: none;
-}
-
-.project-link:hover {
-    text-decoration: underline;
-}
-
-/* Blog */
-
-.posts {
-    border-top: 1px solid var(--border);
-}
-
-.post {
-    display: flex;
-    justify-content: space-between;
-
-    gap: 30px;
-
-    padding: 22px 0;
-
-    border-bottom: 1px solid var(--border);
-
-    text-decoration: none;
-
-    transition: var(--transition);
-}
-
-.post:hover {
-    padding-left: 8px;
-}
-
-.post-title {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.post-description {
-    margin-top: 5px;
-    color: var(--text-secondary);
-    font-size: 14px;
-}
-
-.post-date {
-    color: var(--text-tertiary);
-    font-size: 13px;
-    white-space: nowrap;
-}
-
-/* Contact */
-
-.contact {
-    padding: 35px;
-
-    border: 1px solid var(--border);
-    border-radius: 20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--accent-light),
-            var(--card)
-        );
-}
-
-.contact h2 {
-    margin-bottom: 10px;
-}
-
-.contact p {
-    max-width: 550px;
-}
-
-.contact a {
-    display: inline-block;
-
-    margin-top: 20px;
-
-    color: var(--accent);
-    text-decoration: none;
-
-    font-size: 14px;
-}
-
-/* Footer */
-
-footer {
-    margin-top: 100px;
-
-    padding-top: 25px;
-
-    border-top: 1px solid var(--border);
-
-    display: flex;
-    justify-content: space-between;
-
-    color: var(--text-tertiary);
-    font-size: 13px;
-}
-
-/* Mobile */
-
-@media (max-width: 650px) {
-
-    nav {
-        top: 12px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GetUp — Xiaoyu's Personal Space</title>
+  <meta name="description" content="Xiaoyu's personal website.">
+
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --soft: #f0f3f7;
+      --text: #18202b;
+      --muted: #687384;
+      --faint: #98a1ad;
+      --line: #dfe4ea;
+      --blue: #2563eb;
+      --orange: #d97706;
+      --green: #16845d;
+      --purple: #7956b8;
+      --teal: #0f8b8d;
+      --shadow: 0 18px 42px rgba(24, 32, 43, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #10151c;
+      --surface: #171e28;
+      --soft: #202a37;
+      --text: #f1f5f9;
+      --muted: #a7b2c2;
+      --faint: #718096;
+      --line: #2c3745;
+      --blue: #76a7ff;
+      --orange: #f0a54b;
+      --green: #5bc99a;
+      --purple: #b39ae6;
+      --teal: #61d2d0;
+      --shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1040px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+    }
+
+    .logo {
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 22px;
     }
 
     .nav-right a {
-        display: none;
+      color: var(--muted);
+      font-size: 14px;
+      text-decoration: none;
     }
 
-    main {
-        padding-top: 120px;
+    .nav-right a:hover {
+      color: var(--blue);
+    }
+
+    .theme-toggle,
+    .tour-toggle {
+      min-height: 40px;
+      padding: 8px 12px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .theme-toggle:hover,
+    .tour-toggle:hover,
+    .tour-toggle.is-running {
+      color: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .hero {
+      padding: 86px 0 42px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.3;
     }
 
     h1 {
-        letter-spacing: -2.5px;
+      margin: 0;
+      font-size: 54px;
+      font-weight: 600;
     }
 
     .hero-description {
-        font-size: 18px;
+      max-width: 680px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 18px;
     }
 
-    .now-card {
-        grid-template-columns: 1fr;
-        gap: 10px;
+    .hero-description strong {
+      color: var(--text);
+    }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hero-links a {
+      padding: 9px 15px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .hero-links a:hover {
+      color: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .map-section {
+      margin-top: 36px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .section-heading p {
+      max-width: 540px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .map-tool {
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .map-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .map-status {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .map-status strong {
+      color: var(--text);
+    }
+
+    .map-frame {
+      padding: 12px 18px 18px;
+    }
+
+    .site-map {
+      display: block;
+      width: 100%;
+      min-height: 300px;
+      aspect-ratio: 1000 / 430;
+    }
+
+    .map-bg {
+      fill: var(--surface);
+    }
+
+    .map-line {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 2;
+      stroke-dasharray: 5 8;
+    }
+
+    .map-line.is-active {
+      stroke: var(--blue);
+      stroke-width: 3;
+      animation: line-flow 1.5s linear infinite;
+    }
+
+    .map-node {
+      cursor: pointer;
+      outline: none;
+    }
+
+    .map-circle {
+      stroke: var(--surface);
+      stroke-width: 5;
+      transition: stroke 0.2s, stroke-width 0.2s;
+    }
+
+    .map-node:hover .map-circle,
+    .map-node:focus-visible .map-circle,
+    .map-node.is-active .map-circle {
+      stroke: var(--text);
+      stroke-width: 6;
+    }
+
+    .map-circle.core {
+      fill: var(--text);
+    }
+
+    .map-circle.about {
+      fill: var(--green);
+    }
+
+    .map-circle.now {
+      fill: var(--orange);
+    }
+
+    .map-circle.stack {
+      fill: var(--teal);
+    }
+
+    .map-circle.projects {
+      fill: var(--purple);
+    }
+
+    .map-circle.notes {
+      fill: var(--blue);
+    }
+
+    .map-circle.contact {
+      fill: var(--muted);
+    }
+
+    .map-pulse {
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 2;
+      animation: pulse 2.5s ease-out infinite;
+    }
+
+    .map-label {
+      fill: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      text-anchor: middle;
+    }
+
+    .map-label.sub {
+      fill: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      padding: 0 18px 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .green {
+      background: var(--green);
+    }
+
+    .orange {
+      background: var(--orange);
+    }
+
+    .teal {
+      background: var(--teal);
+    }
+
+    .purple {
+      background: var(--purple);
+    }
+
+    .blue {
+      background: var(--blue);
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.4;
+        transform: scale(0.75);
+        transform-origin: center;
+      }
+
+      70%,
+      100% {
+        opacity: 0;
+        transform: scale(1.8);
+        transform-origin: center;
+      }
+    }
+
+    @keyframes line-flow {
+      to {
+        stroke-dashoffset: -30;
+      }
+    }
+
+    section.content-section {
+      margin-top: 86px;
+    }
+
+    .section-label {
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .about-copy {
+      max-width: 730px;
+      margin: 0;
+    }
+
+    .now-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 26px;
+      padding: 24px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .now-title {
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .now-row p {
+      max-width: 700px;
+      margin: 0;
+    }
+
+    .tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .tech span {
+      padding: 7px 11px;
+      color: var(--muted);
+      background: var(--soft);
+      border-radius: 4px;
+      font-size: 13px;
     }
 
     .projects {
-        grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .project {
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .project:hover {
+      border-color: var(--blue);
+      box-shadow: var(--shadow);
+      transform: translateY(-3px);
+    }
+
+    .project-number {
+      margin-bottom: 26px;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .project h3 {
+      margin: 0 0 9px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .project p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .project-link {
+      display: inline-block;
+      margin-top: 18px;
+      color: var(--blue);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    .posts {
+      border-top: 1px solid var(--line);
     }
 
     .post {
-        flex-direction: column;
-        gap: 5px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+    }
+
+    .post:hover {
+      padding-left: 8px;
+    }
+
+    .post-title {
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .post-description {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .post-date {
+      color: var(--faint);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .contact {
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .contact h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .contact p {
+      max-width: 560px;
+      margin: 0;
+    }
+
+    .contact a {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--blue);
+      text-decoration: none;
     }
 
     footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 86px;
+      padding: 24px 0 44px;
+      color: var(--faint);
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width: min(100% - 28px, 1040px);
+      }
+
+      .nav-right a {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      .hero-description {
+        font-size: 17px;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading p {
+        margin-top: 8px;
+      }
+
+      .map-toolbar {
+        align-items: flex-start;
         flex-direction: column;
         gap: 8px;
+      }
+
+      .site-map {
+        min-height: 280px;
+      }
+
+      .map-label {
+        font-size: 13px;
+      }
+
+      .map-label.sub {
+        font-size: 11px;
+      }
+
+      .now-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .projects {
+        grid-template-columns: 1fr;
+      }
+
+      .post {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
     }
-}
-</style>
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <nav class="site-nav">
+    <div class="container nav-inner">
+      <a class="logo" href="#top">GetUp</a>
 
-<nav>
-
-    <a href=" " class="logo">
-        Xiaoyu
-    </a >
-
-    <div class="nav-right">
-
-        <a href="#about">About</a >
-        <a href="#projects">Projects</a >
-        <a href="#notes">Notes</a >
-
-        <button
-            class="theme-toggle"
-            id="themeBtn">
-            🌙
+      <div class="nav-right">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#notes">Notes</a>
+        <button id="themeBtn" class="theme-toggle" type="button">
+          ☾
         </button>
-
+      </div>
     </div>
+  </nav>
 
-</nav>
+  <main id="top">
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">PERSONAL SPACE / 2026</p>
 
+        <h1>Xiaoyu.</h1>
 
-<main>
+        <p class="hero-description">
+          A <strong>Computer Science student</strong> interested in software
+          development, technology and learning how things work. This is a small
+          space for projects, notes and the journey between them.
+        </p>
 
-<section class="hero">
-
-    <div class="avatar">
-        X
-    </div>
-
-    <div class="hello">
-        Hello, I'm
-    </div>
-
-    <h1>
-        Xiaoyu.
-    </h1>
-
-    <p class="hero-description">
-        A <strong>Computer Science student</strong>
-        interested in software development,
-        technology and learning how things work.
-        <br>
-        Currently building things and documenting the journey.
-    </p >
-
-    <div class="hero-links">
-
-        <a href="#">
+        <div class="hero-links">
+          <a href="https://github.com/Anonymous-1229" target="_blank" rel="noopener">
             GitHub ↗
-        </a >
+          </a>
 
-        <a href="#notes">
+          <a href="#notes">
             Read my notes
-        </a >
+          </a>
 
-        <a href="#contact">
+          <a href="#contact">
             Contact
-        </a >
+          </a>
+        </div>
+      </div>
+    </section>
 
-    </div>
-
-</section>
-
-
-<section id="about">
-
-    <div class="section-header">
-        <h2>About</h2>
-        <span class="section-label">01</span>
-    </div>
-
-    <p>
-        I'm currently studying computer science and exploring
-        programming, algorithms, web development and
-        emerging technologies.
-
-        This website is a small space where I collect
-        projects, notes and things I'm learning along the way.
-    </p >
-
-</section>
-
-
-<section>
-
-    <div class="section-header">
-        <h2>Now</h2>
-        <span class="section-label">02</span>
-    </div>
-
-    <div class="now-card">
-
-        <div class="now-title">
-            Currently
+    <section class="map-section" aria-labelledby="map-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="map-title">A map of this space</h2>
+          <p>
+            点击节点可以快速跳转。自动浏览会依次点亮主页的不同内容。
+          </p>
         </div>
 
-        <p>
-            Building my personal website, learning more about
-            web development, experimenting with code and
-            keeping track of what I learn.
-        </p >
-
-    </div>
-
-</section>
-
-
-<section>
-
-    <div class="section-header">
-        <h2>Tech Stack</h2>
-        <span class="section-label">03</span>
-    </div>
-
-    <div class="tech">
-
-        <span>HTML</span>
-        <span>CSS</span>
-        <span>JavaScript</span>
-        <span>Python</span>
-        <span>Git</span>
-        <span>GitHub</span>
-        <span>Linux</span>
-        <span>Algorithms</span>
-
-    </div>
-
-</section>
-
-
-<section id="projects">
-
-    <div class="section-header">
-        <h2>Projects</h2>
-        <span class="section-label">04</span>
-    </div>
-
-    <div class="projects">
-
-        <div class="project">
-
-            <div class="project-number">
-                PROJECT / 01
+        <div class="map-tool">
+          <div class="map-toolbar">
+            <div class="map-status" aria-live="polite">
+              当前查看：
+              <strong id="map-status-text">主页中心</strong>
             </div>
 
-            <h3>
-                Personal Website
-            </h3>
+            <button id="tourBtn" class="tour-toggle" type="button" aria-pressed="false">
+              自动浏览
+            </button>
+          </div>
+
+          <div class="map-frame">
+            <svg
+              id="site-map"
+              class="site-map"
+              viewBox="0 0 1000 430"
+              role="img"
+              aria-labelledby="site-map-title site-map-desc"
+            >
+              <title id="site-map-title">GetUp 博客主页内容关系图</title>
+
+              <desc id="site-map-desc">
+                中心节点连接 About、Now、Tech Stack、Projects、Notes 和 Contact。
+              </desc>
+
+              <rect class="map-bg" x="0" y="0" width="1000" height="430"></rect>
+
+              <g aria-hidden="true">
+                <line class="map-line" data-line="about"
+                  x1="500" y1="215" x2="190" y2="95"></line>
+
+                <line class="map-line" data-line="now"
+                  x1="500" y1="215" x2="350" y2="345"></line>
+
+                <line class="map-line" data-line="stack"
+                  x1="500" y1="215" x2="620" y2="355"></line>
+
+                <line class="map-line" data-line="projects"
+                  x1="500" y1="215" x2="760" y2="95"></line>
+
+                <line class="map-line" data-line="notes"
+                  x1="500" y1="215" x2="810" y2="315"></line>
+
+                <line class="map-line" data-line="contact"
+                  x1="500" y1="215" x2="190" y2="345"></line>
+              </g>
+
+              <g class="map-node" data-target="about" tabindex="0" role="button" aria-label="跳转到 About">
+                <circle class="map-circle about" cx="190" cy="95" r="25"></circle>
+                <text class="map-label" x="190" y="55">About</text>
+                <text class="map-label sub" x="190" y="137">背景</text>
+              </g>
+
+              <g class="map-node" data-target="now" tabindex="0" role="button" aria-label="跳转到 Now">
+                <circle class="map-circle now" cx="350" cy="345" r="25"></circle>
+                <text class="map-label" x="350" y="393">Now</text>
+                <text class="map-label sub" x="350" y="315">进行中</text>
+              </g>
+
+              <g class="map-node" data-target="stack" tabindex="0" role="button" aria-label="跳转到 Tech Stack">
+                <circle class="map-circle stack" cx="620" cy="355" r="25"></circle>
+                <text class="map-label" x="620" y="405">Stack</text>
+                <text class="map-label sub" x="620" y="325">工具</text>
+              </g>
+
+              <g class="map-node" data-target="projects" tabindex="0" role="button" aria-label="跳转到 Projects">
+                <circle class="map-circle projects" cx="760" cy="95" r="25"></circle>
+                <text class="map-label" x="760" y="55">Projects</text>
+                <text class="map-label sub" x="760" y="137">实践</text>
+              </g>
+
+              <g class="map-node" data-target="notes" tabindex="0" role="button" aria-label="跳转到 Notes">
+                <circle class="map-circle notes" cx="810" cy="315" r="25"></circle>
+                <text class="map-label" x="810" y="363">Notes</text>
+                <text class="map-label sub" x="810" y="285">记录</text>
+              </g>
+
+              <g class="map-node" data-target="contact" tabindex="0" role="button" aria-label="跳转到 Contact">
+                <circle class="map-circle contact" cx="190" cy="345" r="25"></circle>
+                <text class="map-label" x="190" y="393">Contact</text>
+                <text class="map-label sub" x="190" y="315">连接</text>
+              </g>
+
+              <g class="map-node is-active" data-target="top" tabindex="0" role="button" aria-label="回到主页中心">
+                <circle class="map-pulse" cx="500" cy="215" r="42"></circle>
+                <circle class="map-circle core" cx="500" cy="215" r="36"></circle>
+                <text class="map-label" x="500" y="162">GetUp</text>
+                <text class="map-label sub" x="500" y="272">主页中心</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="map-legend">
+            <span class="legend-item">
+              <i class="legend-dot green"></i>
+              个人背景
+            </span>
+
+            <span class="legend-item">
+              <i class="legend-dot orange"></i>
+              当前状态
+            </span>
+
+            <span class="legend-item">
+              <i class="legend-dot teal"></i>
+              技术栈
+            </span>
+
+            <span class="legend-item">
+              <i class="legend-dot purple"></i>
+              项目实践
+            </span>
+
+            <span class="legend-item">
+              <i class="legend-dot blue"></i>
+              文章记录
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="about">
+      <div class="container">
+        <div class="section-heading">
+          <h2>About</h2>
+          <span class="section-label">01</span>
+        </div>
+
+        <p class="about-copy">
+          I'm currently studying computer science and exploring programming,
+          algorithms, web development and emerging technologies. This website
+          is a small space where I collect projects, notes and things I'm
+          learning along the way.
+        </p>
+      </div>
+    </section>
+
+    <section class="content-section" id="now">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Now</h2>
+          <span class="section-label">02</span>
+        </div>
+
+        <div class="now-row">
+          <div class="now-title">Currently</div>
+
+          <p>
+            Building my personal website, learning more about web development,
+            experimenting with code and keeping track of what I learn.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="stack">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Tech Stack</h2>
+          <span class="section-label">03</span>
+        </div>
+
+        <div class="tech">
+          <span>HTML</span>
+          <span>CSS</span>
+          <span>JavaScript</span>
+          <span>Python</span>
+          <span>Git</span>
+          <span>GitHub</span>
+          <span>Linux</span>
+          <span>Algorithms</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="projects">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Projects</h2>
+          <span class="section-label">04</span>
+        </div>
+
+        <div class="projects">
+          <article class="project">
+            <div class="project-number">PROJECT / 01</div>
+
+            <h3>Campus Time Topology</h3>
 
             <p>
-                A personal website built with
-                HTML, CSS and JavaScript.
-            </p >
+              A data-driven attempt to understand the time cost of moving
+              around Southwest University.
+            </p>
 
-            <a href="#" class="project-link">
-                View project →
-            </a >
+            <a href="posts/idea.html" class="project-link">
+              Read the idea →
+            </a>
+          </article>
 
-        </div>
+          <article class="project">
+            <div class="project-number">PROJECT / 02</div>
 
-
-        <div class="project">
-
-            <div class="project-number">
-                PROJECT / 02
-            </div>
-
-            <h3>
-                Learning Notes
-            </h3>
+            <h3>Route Time Visualization</h3>
 
             <p>
-                A collection of notes, experiments and
-                small projects from my learning journey.
-            </p >
+              An interactive chart for comparing estimated travel time from
+              different campus locations.
+            </p>
 
-            <a href="#" class="project-link">
-                Explore notes →
-            </a >
+            <a href="posts/idea-visualization.html" class="project-link">
+              Open visualization →
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
 
+    <section class="content-section" id="notes">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Recent Notes</h2>
+          <span class="section-label">05</span>
         </div>
 
-    </div>
-
-</section>
-
-
-<section id="notes">
-
-    <div class="section-header">
-        <h2>Recent Notes</h2>
-        <span class="section-label">05</span>
-    </div>
-
-    <div class="posts">
-
-        <a href="#" class="post">
-
+        <div class="posts">
+          <a href="posts/idea.html" class="post">
             <div>
-                <div class="post-title">
-                    What I'm learning about JavaScript
-                </div>
+              <div class="post-title">
+                严肃搞怪｜西大上课时间成本拓扑图
+              </div>
 
-                <div class="post-description">
-                    Small notes and experiments.
-                </div>
+              <div class="post-description">
+                用数据思维把校园里的距离和体感变成时间成本。
+              </div>
             </div>
 
-            <div class="post-date">
-                Aug 2026
-            </div>
+            <div class="post-date">Aug 2026</div>
+          </a>
 
-        </a >
-
-
-        <a href="#" class="post">
-
+          <a href="posts/idea-visualization.html" class="post">
             <div>
-                <div class="post-title">
-                    Getting started with GitHub
-                </div>
+              <div class="post-title">
+                路线时间成本可视化
+              </div>
 
-                <div class="post-description">
-                    Things I learned while building my website.
-                </div>
+              <div class="post-description">
+                选择起点，比较到其他地点的预计最短时间。
+              </div>
             </div>
 
-            <div class="post-date">
-                Jul 2026
-            </div>
+            <div class="post-date">Aug 2026</div>
+          </a>
 
-        </a >
-
-
-        <a href="#" class="post">
-
+          <a href="#contact" class="post">
             <div>
-                <div class="post-title">
-                    My notes on data structures
-                </div>
+              <div class="post-title">
+                More notes are on the way
+              </div>
 
-                <div class="post-description">
-                    A collection of concepts and examples.
-                </div>
+              <div class="post-description">
+                学习、实验，以及那些还没有被整理好的想法。
+              </div>
             </div>
 
-            <div class="post-date">
-                Jun 2026
-            </div>
+            <div class="post-date">Soon</div>
+          </a>
+        </div>
+      </div>
+    </section>
 
-        </a >
+    <section class="content-section" id="contact">
+      <div class="container">
+        <div class="contact">
+          <h2>Let's connect.</h2>
 
-    </div>
+          <p>
+            I'm always interested in learning, building interesting things
+            and meeting people who enjoy technology.
+          </p>
 
-</section>
-
-
-<section id="contact">
-
-    <div class="contact">
-
-        <h2>
-            Let's connect.
-        </h2>
-
-        <p>
-            I'm always interested in learning,
-            building interesting things and meeting
-            people who enjoy technology.
-        </p >
-
-        <a href="mailto:your@email.com">
+          <a href="mailto:your@email.com">
             your@email.com →
-        </a >
+          </a>
+        </div>
+      </div>
+    </section>
 
-    </div>
+    <footer class="container">
+      <span>© 2026 Xiaoyu</span>
+      <span>Built with HTML · CSS · JavaScript</span>
+    </footer>
+  </main>
 
-</section>
+  <script>
+    const themeBtn = document.getElementById("themeBtn");
+    const tourBtn = document.getElementById("tourBtn");
+    const mapStatus = document.getElementById("map-status-text");
+    const mapNodes = Array.from(document.querySelectorAll(".map-node"));
+    const mapLines = Array.from(document.querySelectorAll(".map-line"));
+    const sections = Array.from(document.querySelectorAll("section[id]"));
 
+    const reduceMotion =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-<footer>
+    let theme = "light";
+    let tourTimer = null;
+    let tourIndex = -1;
+    let manualTarget = null;
+    let manualTargetTimer = null;
 
-    <span>
-        © 2026 Xiaoyu
-    </span>
-
-    <span>
-        Built with HTML · CSS · JavaScript
-    </span>
-
-</footer>
-
-</main>
-
-
-<script>
-
-const btn = document.getElementById("themeBtn");
-
-let theme =
-    localStorage.getItem("theme") || "light";
-
-applyTheme(theme);
-
-
-btn.addEventListener("click", () => {
-
-    theme =
-        theme === "light"
-        ? "dark"
-        : "light";
-
-    localStorage.setItem(
-        "theme",
-        theme
-    );
-
-    applyTheme(theme);
-
-});
-
-
-function applyTheme(theme) {
-
-    if (theme === "dark") {
-
-        document.documentElement
-            .setAttribute(
-                "data-theme",
-                "dark"
-            );
-
-        btn.textContent = "☀️";
-
-    } else {
-
-        document.documentElement
-            .removeAttribute(
-                "data-theme"
-            );
-
-        btn.textContent = "🌙";
-
+    try {
+      theme = localStorage.getItem("getup-theme") || "light";
+    } catch (error) {
+      theme = "light";
     }
 
-}
+    function setTheme(nextTheme) {
+      if (nextTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeBtn.textContent = "☀";
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        themeBtn.textContent = "☾";
+      }
 
-</script>
+      themeBtn.setAttribute(
+        "aria-label",
+        nextTheme === "dark"
+          ? "切换到浅色主题"
+          : "切换到深色主题"
+      );
+    }
 
+    setTheme(theme);
+
+    themeBtn.addEventListener("click", function() {
+      theme = theme === "light" ? "dark" : "light";
+
+      try {
+        localStorage.setItem("getup-theme", theme);
+      } catch (error) {
+        // 当前访问仍然可以切换主题。
+      }
+
+      setTheme(theme);
+    });
+
+    function activateMapNode(targetId, shouldScroll) {
+      mapNodes.forEach(function(node) {
+        node.classList.toggle(
+          "is-active",
+          node.dataset.target === targetId
+        );
+      });
+
+      mapLines.forEach(function(line) {
+        line.classList.toggle(
+          "is-active",
+          line.dataset.line === targetId
+        );
+      });
+
+      const target = document.querySelector(
+        "[data-target=\"" + targetId + "\"]"
+      );
+
+      const targetLabel = target
+        ? target.querySelector(".map-label").textContent
+        : "主页中心";
+
+      mapStatus.textContent = targetLabel;
+
+      if (shouldScroll) {
+        manualTarget = targetId;
+
+        if (manualTargetTimer) {
+          window.clearTimeout(manualTargetTimer);
+        }
+
+        manualTargetTimer = window.setTimeout(function() {
+          manualTarget = null;
+        }, 1200);
+
+        const section = document.getElementById(targetId);
+
+        if (section) {
+          section.scrollIntoView({
+            behavior: reduceMotion ? "auto" : "smooth",
+            block: "start"
+          });
+        }
+      }
+    }
+
+    mapNodes.forEach(function(node) {
+      function activateFromNode() {
+        activateMapNode(node.dataset.target, true);
+      }
+
+      node.addEventListener("click", activateFromNode);
+
+      node.addEventListener("keydown", function(event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          activateFromNode();
+        }
+      });
+    });
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (
+          entry.isIntersecting &&
+          !tourTimer &&
+          !manualTarget
+        ) {
+          activateMapNode(entry.target.id, false);
+        }
+      });
+    }, {
+      rootMargin: "-30% 0px -55% 0px",
+      threshold: 0
+    });
+
+    sections.forEach(function(section) {
+      observer.observe(section);
+    });
+
+    function stopTour() {
+      if (tourTimer) {
+        window.clearInterval(tourTimer);
+        tourTimer = null;
+      }
+
+      tourBtn.classList.remove("is-running");
+      tourBtn.setAttribute("aria-pressed", "false");
+      tourBtn.textContent = "自动浏览";
+    }
+
+    function advanceTour() {
+      const targets = [
+        "about",
+        "now",
+        "stack",
+        "projects",
+        "notes",
+        "contact"
+      ];
+
+      tourIndex = (tourIndex + 1) % targets.length;
+      activateMapNode(targets[tourIndex], true);
+    }
+
+    tourBtn.addEventListener("click", function() {
+      if (tourTimer) {
+        stopTour();
+        return;
+      }
+
+      tourBtn.classList.add("is-running");
+      tourBtn.setAttribute("aria-pressed", "true");
+      tourBtn.textContent = "停止浏览";
+
+      advanceTour();
+      tourTimer = window.setInterval(advanceTour, 2200);
+    });
+
+    if (reduceMotion) {
+      stopTour();
+    }
+  </script>
 </body>
 </html>
