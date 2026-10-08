@@ -12,8 +12,19 @@
   let liveTranslator = null;
   let liveRunning = false;
   let liveSegments = [];
-  let liveQueue = Promise.resolve();
+  let liveSessionId = null;
+  let liveStartedAt = 0;
+  let liveRestartTimer = null;
+  let liveRestartAttempts = 0;
+  let liveMetricsTimer = null;
+  let liveWakeLock = null;
+  let liveSaveFailed = false;
+  let translationQueue = [];
+  let translationBusy = false;
+  let liveRenderPending = false;
+  let transcriptVisible = 100;
   let modelPromise = null;
+  let zipPromise = null;
   const seenEnglishTerms = new Set();
   let toastTimer;
 
@@ -230,16 +241,63 @@
     return zh;
   }
   function renderLive() {
+    liveRenderPending = false;
     for (const [id, field, empty] of [["live-en", "en", "英文转录将在这里显示。"], ["live-zh", "zh", "中文翻译将在这里显示。"]]) {
       const box = $(id); box.replaceChildren();
       if (!liveSegments.length) { box.append(el("p", "", empty)); continue; }
-      for (const segment of liveSegments) {
+      for (const segment of liveSegments.slice(-60)) {
         const line = el("p", "live-line", `${segment.time}  ${segment[field] || (field === "zh" ? "[翻译中]" : "[听不清]")}`);
-        box.append(line);
+          box.append(line);
       }
+      box.scrollTop = box.scrollHeight;
     }
     $("save-live").disabled = !liveSegments.length;
     $("export-live").disabled = !liveSegments.length;
+    renderLiveMetrics();
+  }
+  function queueLiveRender() {
+    if (liveRenderPending) return;
+    liveRenderPending = true;
+    requestAnimationFrame(renderLive);
+  }
+  function renderLiveMetrics() {
+    const elapsed = liveStartedAt ? Math.floor((Date.now() - liveStartedAt) / 1000) : 0;
+    const duration = `${String(Math.floor(elapsed / 3600)).padStart(2, "0")}:${String(Math.floor(elapsed / 60) % 60).padStart(2, "0")}:${String(elapsed % 60).padStart(2, "0")}`;
+    $("session-metrics").textContent = liveStartedAt
+      ? `${liveRunning ? "收音中" : "本次已停止"} ${duration} · ${liveSegments.length} 段 · 待翻译 ${translationQueue.length + Number(translationBusy)} 段 · ${liveSaveFailed ? "自动保存失败，请立即导出" : "已自动保存在当前浏览器"}`
+      : "本次尚未开始 · 记录会自动保存在当前浏览器";
+  }
+  function saveLiveProgress() {
+    liveSaveFailed = !save();
+    renderLiveMetrics();
+  }
+  async function pumpTranslation() {
+    if (translationBusy || !liveTranslator) return;
+    translationBusy = true;
+    try {
+      while (translationQueue.length && liveTranslator) {
+        const segment = translationQueue.shift();
+        try {
+          segment.zh = polishTranslation(segment.en, await liveTranslator.translate(segment.en)) || "[译文为空，请核对英文原句]";
+          if ($("play-translation").checked && liveRunning && "speechSynthesis" in window) {
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(segment.zh); utterance.lang = "zh-CN"; speechSynthesis.speak(utterance);
+          }
+        } catch { segment.zh = "[翻译失败，请核对英文原句]"; }
+        saveLiveProgress();
+        queueLiveRender();
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+    } finally { translationBusy = false; renderLiveMetrics(); }
+  }
+  function enqueueTranslation(segment) {
+    if (translationQueue.length >= 300) {
+      segment.zh = "[翻译排队过长，仅保存英文原句；可课后手动补译]";
+      setLiveStatus("收音中 · 译文延迟", "英文原句仍会自动保存；翻译队列已满，请课后核对并补译。建议关闭中文朗读。 ");
+      return;
+    }
+    translationQueue.push(segment);
+    void pumpTranslation();
   }
   function makeTranslator() {
     if (modelPromise) return modelPromise;
@@ -264,26 +322,24 @@
     }
     $("start-listening").disabled = false;
     setLiveStatus("可尝试收音", "点击开始后，浏览器会请求麦克风权限。语音识别可能由浏览器服务商处理音频；英中翻译由页面内的 OPUS-MT 模型完成，首次使用需下载并缓存在此浏览器。");
-    $("start-listening").addEventListener("click", async () => {
+    $("start-listening").addEventListener("click", () => {
       if (liveRunning) return;
+      const course = $("transcript-course").value.trim();
+      if (forbidden(course)) return toast("这门课程不纳入个人记录");
+      liveSegments = [];
+      translationQueue = [];
+      liveSessionId = uid();
+      const sessionId = liveSessionId;
+      liveStartedAt = Date.now();
+      liveSaveFailed = false;
+      liveRestartAttempts = 0;
+      renderLive();
       liveRunning = true;
       $("start-listening").disabled = true;
       $("stop-listening").disabled = false;
-      setLiveStatus("准备中", "正在连接浏览器语音识别并检查翻译模型。首次使用可能需要下载语言模型。");
+      liveMetricsTimer = setInterval(renderLiveMetrics, 10000);
+      setLiveStatus("准备中", "正在连接浏览器语音识别；翻译模型会在后台准备。首次使用可能需要下载模型。");
       try {
-        const pendingTranslator = makeTranslator();
-        liveTranslator = await Promise.race([pendingTranslator, new Promise(resolve => setTimeout(() => resolve(null), 6000))]);
-        pendingTranslator.then(translator => {
-          if (translator === liveTranslator) return;
-          if (!liveRunning) { try { translator?.destroy?.(); } catch {} return; }
-          if (translator) {
-            liveTranslator = translator;
-            setLiveStatus("正在收音翻译", "翻译模型已准备好；后续识别片段会显示中文。之前未翻译的片段请核对英文原句。");
-          }
-        }).catch((error) => {
-          if (liveRunning) setLiveStatus("收音中 · 翻译模型失败", `英文识别仍可继续；翻译模型未能加载：${error?.message || "未知错误"}。请检查网络后重新开始。`);
-        });
-        if (!liveRunning) return;
         const recognition = new Recognition();
         recognition.lang = "en-US";
         recognition.continuous = true;
@@ -295,33 +351,53 @@
             if (!result.isFinal) continue;
             const en = String(result[0]?.transcript || "").trim();
             if (!en) continue;
-            const segment = { time: new Date().toLocaleTimeString("zh-CN", { hour12: false }), en, zh: liveTranslator ? "" : "[翻译模型加载中，原句待核对]" };
-            liveSegments.push(segment); renderLive();
-            if (liveTranslator) {
-              liveQueue = liveQueue.then(async () => {
-                try {
-                  segment.zh = polishTranslation(en, await liveTranslator.translate(en));
-                  if ($( "play-translation").checked && liveRunning && "speechSynthesis" in window) {
-                    const utterance = new SpeechSynthesisUtterance(segment.zh); utterance.lang = "zh-CN"; speechSynthesis.speak(utterance);
-                  }
-                } catch { segment.zh = "[翻译失败，请核对英文原句]"; }
-                renderLive();
-              });
-            }
+            liveRestartAttempts = 0;
+            const now = new Date();
+            const segment = { id: uid(), sessionId: liveSessionId, time: now.toLocaleTimeString("zh-CN", { hour12: false }), course, date: $("transcript-date").value || iso(now), en, zh: "", savedAt: now.toISOString(), origin: "浏览器语音识别 · 自动翻译待核对" };
+            liveSegments.push(segment);
+            state.transcripts.unshift(segment);
+            saveLiveProgress();
+            enqueueTranslation(segment);
+            queueLiveRender();
           }
         };
         recognition.onerror = (event) => {
           const reason = event.error === "not-allowed" ? "麦克风权限被拒绝" : event.error === "no-speech" ? "暂未识别到讲话" : `语音识别中断：${event.error}`;
-          setLiveStatus(reason, "检查浏览器权限、网络和麦克风后可重新开始。已显示的片段可保存或导出。");
+          if (event.error === "no-speech") liveRestartAttempts = 0;
+          const help = event.error === "not-allowed" || event.error === "service-not-allowed"
+            ? "请在手机 Chrome 或 Edge 中直接打开网址，在系统权限和浏览器的网站设置中允许麦克风，然后刷新页面重试。部分应用内置浏览器不会授予网页麦克风权限。已识别的片段仍可导出。"
+            : "检查网络和麦克风后可重新开始。已识别的英文会保存在当前浏览器，也可导出。";
+          setLiveStatus(reason, help);
           if (event.error === "not-allowed" || event.error === "service-not-allowed" || event.error === "audio-capture") stopLive();
         };
         recognition.onend = () => {
           if (!liveRunning || liveRecognition !== recognition) return;
-          try { recognition.start(); } catch { stopLive(); }
+          clearTimeout(liveRestartTimer);
+          liveRestartAttempts++;
+          if (liveRestartAttempts > 12) {
+            stopLive();
+            setLiveStatus("语音识别反复中断", "已停止自动重试；请检查网络、麦克风和浏览器权限后重新开始。已识别的英文已保存。");
+            return;
+          }
+          const delay = Math.min(1000 * 2 ** Math.min(liveRestartAttempts - 1, 4), 15000);
+          setLiveStatus("识别中断 · 正在重连", `${Math.ceil(delay / 1000)} 秒后自动重试；已识别的英文已保存在当前浏览器。`);
+          liveRestartTimer = setTimeout(() => {
+            if (!liveRunning || liveRecognition !== recognition) return;
+            try { recognition.start(); } catch { recognition.onend(); }
+          }, delay);
         };
         liveRecognition = recognition;
         recognition.start();
-        setLiveStatus(liveTranslator ? "正在收音翻译" : "正在收音 · 模型加载中", liveTranslator ? "英文识别结果和中文译文会逐段出现。结果仅供课堂辅助，请核对专业术语与关键数字。" : "正在准备浏览器内翻译模型。模型下载期间仍可显示英文原句。");
+        setLiveStatus("正在收音 · 模型加载中", "英文识别已启动；模型准备期间英文原句会先保存，之后自动补译。");
+        if (navigator.wakeLock?.request) navigator.wakeLock.request("screen").then(lock => { if (liveRunning) liveWakeLock = lock; else lock.release(); }).catch(() => {});
+        makeTranslator().then(translator => {
+          if (!liveRunning || liveSessionId !== sessionId) return;
+          liveTranslator = translator;
+          setLiveStatus("正在收音翻译", "英文原句实时保存；中文译文逐段补上。请核对关键术语、否定、数字和公式。");
+          void pumpTranslation();
+        }).catch((error) => {
+          if (liveRunning && liveSessionId === sessionId) setLiveStatus("收音中 · 翻译模型失败", `英文仍自动保存；翻译模型未能加载：${error?.message || "未知错误"}。请检查网络后重新开始。`);
+        });
       } catch (error) {
         stopLive();
         setLiveStatus("启动失败", `浏览器未能启动课堂收音：${error?.message || "未知错误"}。请检查权限、网络与浏览器支持情况。`);
@@ -330,11 +406,7 @@
     $("stop-listening").addEventListener("click", stopLive);
     $("save-live").addEventListener("click", () => {
       if (!liveSegments.length) return;
-      const course = $("transcript-course").value.trim();
-      if (forbidden(course)) return toast("这门课程不纳入个人记录");
-      const date = $("transcript-date").value || iso(new Date());
-      for (const segment of liveSegments) state.transcripts.unshift({ id: uid(), course, date, en: `${segment.time} ${segment.en}`, zh: segment.zh || "[翻译未完成]", savedAt: new Date().toISOString(), origin: "浏览器语音识别 · 自动翻译待核对" });
-      save(); renderTranscripts(); toast("本次片段已保存在当前浏览器");
+      saveLiveProgress(); renderTranscripts(); toast(liveSaveFailed ? "保存失败，请立即导出本次记录" : "本次片段已保存在当前浏览器");
     });
     $("export-live").addEventListener("click", () => {
       if (!liveSegments.length) return;
@@ -344,31 +416,46 @@
   }
   function stopLive() {
     liveRunning = false;
+    clearTimeout(liveRestartTimer);
+    clearInterval(liveMetricsTimer);
+    liveRestartTimer = null;
+    liveMetricsTimer = null;
     try { liveRecognition?.abort(); } catch {}
     liveRecognition = null;
     liveTranslator = null;
+    try { liveWakeLock?.release(); } catch {}
+    liveWakeLock = null;
+    if (liveSegments.length) saveLiveProgress();
     if ("speechSynthesis" in window) speechSynthesis.cancel();
     $("start-listening").disabled = !(window.SpeechRecognition || window.webkitSpeechRecognition);
     $("stop-listening").disabled = true;
-    if (["准备中", "正在收音翻译", "正在收音 · 模型加载中", "正在下载翻译模型", "收音中 · 翻译模型失败"].includes($("translation-status").textContent)) setLiveStatus("已停止收音", "麦克风已停止。可以保存、导出本次片段，或再次开始。");
+    if (["准备中", "正在收音翻译", "正在收音 · 模型加载中", "正在下载翻译模型", "收音中 · 翻译模型失败", "收音中 · 译文延迟", "识别中断 · 正在重连"].includes($("translation-status").textContent)) setLiveStatus("已停止收音", "麦克风已停止。已识别的英文保存在当前浏览器；可导出本次记录。");
+    renderLiveMetrics();
   }
   function renderTranscripts() {
     const list = $("transcript-list"); list.replaceChildren(); $("transcript-count").textContent = `${state.transcripts.length} 段`;
     if (!state.transcripts.length) return addEmpty(list, "还没有保存课堂片段。");
-    for (const item of state.transcripts) {
+    for (const item of state.transcripts.slice(0, transcriptVisible)) {
       const row = el("article", "list-item"), main = el("div"), actions = el("div", "item-actions");
       main.append(el("div", "list-meta", `${item.date} · ${item.course || "未填写课程"} · ${item.origin}`), el("h3", "", item.zh || "未填写中文译文"), el("p", "", item.en || "未填写英文原句"));
       if (item.zh && "speechSynthesis" in window) { const play = el("button", "small-button", "播放中文"); play.addEventListener("click", () => { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(item.zh); u.lang = "zh-CN"; speechSynthesis.speak(u); }); actions.append(play); }
       const del = el("button", "small-button", "删除"); del.addEventListener("click", () => removeItem("transcripts", item.id, renderTranscripts)); actions.append(del); row.append(main, actions); list.append(row);
+    }
+    if (state.transcripts.length > transcriptVisible) {
+      const more = el("button", "secondary-button", `再显示 100 段 · 还有 ${state.transcripts.length - transcriptVisible} 段`);
+      more.type = "button"; more.addEventListener("click", () => { transcriptVisible += 100; renderTranscripts(); }); list.append(more);
     }
   }
   function extractOutline(text) {
     const names = ["知识框架", "重点", "术语", "公式", "例子", "疑问", "复习题"];
     const groups = Object.fromEntries(names.map(x => [x, []]));
     const lines = text.split(/\r?\n/);
+    let currentPage = "";
     lines.forEach((raw, index) => {
       const line = raw.trim(); if (!line) return;
-      const position = (line.match(/^(?:\[?\d{1,2}:\d{2}(?::\d{2})?\]?|第\s*\d+\s*页)/) || [])[0] || `第 ${index + 1} 行`;
+      const page = (line.match(/^第\s*\d+\s*页$/) || [])[0];
+      if (page) { currentPage = page; return; }
+      const position = (line.match(/^(?:\[?\d{1,2}:\d{2}(?::\d{2})?\]?|第\s*\d+\s*页)/) || [])[0] || (currentPage ? `${currentPage} · 第 ${index + 1} 行` : `第 ${index + 1} 行`);
       const item = { text: line, line: index, position };
       if (/^(?:#+\s*|[一二三四五六七八九十]+[、.]|\d+[.)、])/.test(line)) groups["知识框架"].push(item);
       if (/重点|关键|important|note that/i.test(line)) groups["重点"].push(item);
@@ -399,8 +486,53 @@
       } box.append(group);
     }
   }
+  function loadZipLibrary() {
+    if (window.JSZip) return Promise.resolve(window.JSZip);
+    if (!zipPromise) zipPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = new URL("./vendor/jszip.min.js", location.href).href;
+      script.onload = () => window.JSZip ? resolve(window.JSZip) : reject(new Error("PPTX 解包工具未加载"));
+      script.onerror = () => reject(new Error("PPTX 解包工具下载失败"));
+      document.head.append(script);
+    }).catch(error => { zipPromise = null; throw error; });
+    return zipPromise;
+  }
+  async function extractPptxText(file) {
+    if (!/\.pptx$/i.test(file.name)) throw new Error("请使用 .pptx 文件；旧版 .ppt 请先另存为 .pptx");
+    if (file.size > 50 * 1024 * 1024) throw new Error("文件超过 50 MB；请先压缩图片或拆分课件");
+    const JSZip = await loadZipLibrary();
+    const archive = await JSZip.loadAsync(file);
+    const slidePaths = Object.keys(archive.files).filter(path => /^ppt\/slides\/slide\d+\.xml$/i.test(path)).sort((a, b) => Number(a.match(/slide(\d+)\.xml/i)[1]) - Number(b.match(/slide(\d+)\.xml/i)[1]));
+    if (!slidePaths.length) throw new Error("文件中没有可读取的幻灯片");
+    const pages = [];
+    const ns = "http://schemas.openxmlformats.org/drawingml/2006/main";
+    for (const path of slidePaths) {
+      const xml = new DOMParser().parseFromString(await archive.file(path).async("string"), "application/xml");
+      if (xml.querySelector("parsererror")) throw new Error("课件中的幻灯片 XML 无法解析");
+      const paragraphs = Array.from(xml.getElementsByTagNameNS(ns, "p"));
+      const lines = paragraphs.map(p => Array.from(p.getElementsByTagNameNS(ns, "t")).map(t => t.textContent || "").join("").trim()).filter(Boolean);
+      if (lines.length) pages.push(`第 ${path.match(/slide(\d+)\.xml/i)[1]} 页\n${lines.join("\n")}`);
+    }
+    if (!pages.length) throw new Error("课件没有可提取的文字；图片里的文字暂时无法识别");
+    return { text: `课件：${file.name}\n\n${pages.join("\n\n")}`, pages: pages.length, slides: slidePaths.length };
+  }
   function setupSummaries() {
     $("note-date").value = iso(new Date());
+    $("import-pptx").addEventListener("change", async event => {
+      const input = event.currentTarget, file = input.files?.[0];
+      if (!file) return;
+      input.disabled = true;
+      toast("正在从 PPTX 提取文字与页码…");
+      try {
+        const extracted = await extractPptxText(file);
+        const source = $("note-source");
+        source.value = source.value.trim() ? `${source.value.trim()}\n\n${extracted.text}` : extracted.text;
+        $("note-kind").value = "讲义文字";
+        renderOutline(source.value, extractOutline(source.value));
+        toast(`已提取 ${extracted.pages}/${extracted.slides} 页的文字；请核对后点击“保存笔记”`);
+      } catch (error) { toast(`导入失败：${error?.message || "无法读取此课件"}`); }
+      finally { input.value = ""; input.disabled = false; }
+    });
     $("outline-note").addEventListener("click", () => { const text = $("note-source").value.trim(); if (!text) return toast("请先粘贴原文"); renderOutline(text, extractOutline(text)); });
     $("save-note").addEventListener("click", () => {
       const course = $("note-course").value.trim(), text = $("note-source").value.trim();
